@@ -1,1 +1,69 @@
-"%texfile" -
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+
+\title{Variance exploration}
+% \author{aaghaeeyan }
+% \date{September 2025}
+
+\begin{document}
+	\section{Higher moments of the case reproductive number}
+	\begin{align*}
+	C(\tau, \rho) &= \beta \int_{t = \tau}^{t= \rho} x(t) dt,\\
+	\omega (\tau, \rho) & = i(\tau) f(\rho - \tau),\\
+	i(\tau) & = \beta x(\tau) y(\tau),
+	\end{align*}
+	where $x(t)$ and
+	$y(t)$  are the proportions of susceptible and infectious individuals, respectively, and $f(t)$ is the distribution of residence time in the infectious compartment.
+	
+	
+	The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as
+	\begin{small}
+		\begin{align*} 
+		C_k &= \int \int i(\tau) f(\rho-\tau) d\tau d\rho \big (\int_{\tau}^{\rho} \beta x(s) ds \big )^k \\
+		&= \beta^k \int \int i(\tau) f(\rho-\tau) d\tau d\rho \underbrace{\int_{\tau}^{\rho} \cdots \int_{\tau}^{\rho}}_{k \text{ times}} x(t_1) \ldots x(t_k) dt_1 \ldots dt_k
+		\end{align*}
+		The integral of the symmetric $k$-variable function $x(t_1)\ldots x(t_k)$  over the hybercube $[\tau, \rho]^k$ is equal to $k!$ times the integral of the function over the region $\tau<t_1<t_2<\ldots<t_k < \rho$.
+		Hence, we have
+		\begin{align*}
+		&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k < \rho} \int \underbrace{\int \ldots \int}_{k \text{ times}}
+		i(\tau) f(\rho-\tau) d\rho d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \\
+		&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k } \underbrace{\int \ldots \int}_{k \text{ times}}
+		i(\tau)  d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \underbrace{\int_{\rho = t_k}^\infty f(\rho - \tau) d\rho}_{F(t_k-\tau)}
+		\end{align*}
+		Using the Markovian property, we have
+		\(F(t_k - \tau) = F(t_k - t_{k-1})\times F(t_{k-1} - t_{k-2}) \times \ldots \times F(t_1 - \tau) \).
+		By defining $t_0$ as $\tau$,
+		the term $ \int_{t_l<t_{l+1}} dt_l i(t_l) F(t_{l+1} - t_l)$, for $l \in {0,\ldots,k-1}$, is equal to $y(t_{l+1})$.
+		The multiplication of $y(t_{l+1})$ and $\beta x(t_{l+1})$ equals $i(t_{l+1}).$ 
+		By repeating the same procedure for $k$ times,
+		the remaining element would be $k! \int i(t_k) dt_k$.
+	\end{small}
+	
+	\section{A model with a more general incidence term}
+	I'm not quite sure if the following relation between the incidence, $i$, and the expected reproductive number is always true
+	\begin{align*}
+	C(\tau, \rho) &= \int_{t = \tau}^{t= \rho} h(t) dt,\\
+	\omega (\tau, \rho) & = i(\tau) f(\rho - \tau),\\
+	i(\tau) & = h(\tau) y(\tau),
+	\end{align*}
+	where $h(t)$ is some function of states and, in turn, time, and
+	$y(t)$ is the proportion of infectious individuals.
+	
+	If so, it appears that the functional form of $h(t)$ does not matter. Please see below. 
+	
+	The second raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as follows
+	\begin{small}
+		\begin{align*} 
+		C_2 &= \int_{\tau = 0}^\infty \int_{\rho = \tau}^\infty i(\tau) f(\rho-\tau) d\rho d\tau \int_{t=\tau}^{\rho} \int_{s=\tau}^{\rho} h(t) h(s) dt ds\\
+		&= 2 \int_{\tau = 0}^\infty \int_{\rho = \tau}^\infty 
+		\int_{t=s}^{\rho} \int_{s=\tau}^{t}i(\tau) f(\rho-\tau) d\rho d\tau  h(t) h(s) dt ds\\
+		& = 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds \underbrace{\int_{\rho = t}^\infty f(\rho - \tau) d\rho}_{F(t-\tau)}\\
+		& = 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds \underbrace{F(t-\tau)}_{F(t-s)F(s-\tau)}\\
+		& = 2  \int_{t=s}^\infty \int_{s=\tau}^t h(t) F(t-s)h(s)ds\underbrace{\int_{\tau = 0}^{s} d\tau i(\tau)F(s-\tau)}_{y(s)}\\
+		& = 2  \int_{t=0}^\infty \int_{s=0}^t h(t)ds F(t-s)\underbrace{h(s) y(s)}_{i(s)}\\
+		& = 2  \int_{t=0}^\infty  h(t) \underbrace{\int_{s=0}^t ds F(t-s){i(s)}}_{y(t)}\\
+		& = 2 \int_{t=0}^\infty i(t) dt
+		\end{align*}
+	\end{small}
+\end{document}
