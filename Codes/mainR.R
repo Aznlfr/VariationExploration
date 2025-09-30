@@ -18,6 +18,6 @@ res_mat <- as.data.frame(t(mapply(outbreakStats, omega= grid$omg, B1=grid$B1,
                       list(B0 = B0, y0 = 1e-9, gmma=gmma,
                            cars=cars, kpa=kpas, steps=steps))))
 
-xtable(SeasonDat, row.names=FALSE)
+xtable(res_mat, row.names=FALSE)
 
 
