@@ -1,9 +1,8 @@
-
 mRiderivs <- function(time, vars, parms){
   dens <- with(parms,
                cars^cars*(time - T0)^(cars-1)*exp(-cars*(time -
                                                            T0))/factorial(cars-1))
-  Rc <- parms$Ri*(time - parms$T0)
+  Rc <- parms$Ri
   return(with(c(parms, vars), list(c(
     # Rcdot = parms$Ri
       ddot = dens
