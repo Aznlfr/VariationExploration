@@ -7,46 +7,17 @@
 % \date{September 2025}
 
 \begin{document}
-	\section{Higher moments of the case reproductive number}
-	\begin{align*}
-	C(\tau, \rho) &= \beta \int_{t = \tau}^{t= \rho} x(t) dt,\\
-	\omega (\tau, \rho) & = i(\tau) f(\rho - \tau),\\
-	i(\tau) & = \beta x(\tau) y(\tau),
-	\end{align*}
-	where $x(t)$ and
-	$y(t)$  are the proportions of susceptible and infectious individuals, respectively, and $f(t)$ is the distribution of residence time in the infectious compartment.
-	
-	
-	The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as
-	\begin{small}
-		\begin{align*} 
-		C_k &= \int \int i(\tau) f(\rho-\tau) d\tau d\rho \big (\int_{\tau}^{\rho} \beta x(s) ds \big )^k \\
-		&= \beta^k \int \int i(\tau) f(\rho-\tau) d\tau d\rho \underbrace{\int_{\tau}^{\rho} \cdots \int_{\tau}^{\rho}}_{k \text{ times}} x(t_1) \ldots x(t_k) dt_1 \ldots dt_k
-		\end{align*}
-		The integral of the symmetric $k$-variable function $x(t_1)\ldots x(t_k)$  over the hybercube $[\tau, \rho]^k$ is equal to $k!$ times the integral of the function over the region $\tau<t_1<t_2<\ldots<t_k < \rho$.
-		Hence, we have
-		\begin{align*}
-		&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k < \rho} \int \underbrace{\int \ldots \int}_{k \text{ times}}
-		i(\tau) f(\rho-\tau) d\rho d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \\
-		&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k } \underbrace{\int \ldots \int}_{k \text{ times}}
-		i(\tau)  d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \underbrace{\int_{\rho = t_k}^\infty f(\rho - \tau) d\rho}_{F(t_k-\tau)}
-		\end{align*}
-		Using the Markovian property, we have
-		\(F(t_k - \tau) = F(t_k - t_{k-1})\times F(t_{k-1} - t_{k-2}) \times \ldots \times F(t_1 - \tau) \).
-		By defining $t_0$ as $\tau$,
-		the term $ \int_{t_l<t_{l+1}} dt_l i(t_l) F(t_{l+1} - t_l)$, for $l \in {0,\ldots,k-1}$, is equal to $y(t_{l+1})$.
-		The multiplication of $y(t_{l+1})$ and $\beta x(t_{l+1})$ equals $i(t_{l+1}).$ 
-		By repeating the same procedure for $k$ times,
-		the remaining element would be $k! \int i(t_k) dt_k$.
-	\end{small}
-	
-	\section{A model with a more general incidence term}
-	I'm not quite sure if the following relation between the incidence, $i$, and the expected reproductive number is always true
-	\begin{align*}
+	\section{Expected case reproductive number $R_c$}	
+	\subsection{A model with a more general incidence term}
+Assume that the following relation between the incidence, $i$, and the expected reproductive number is true
+	\begin{subequations} 
+		\label{eq_CaseReproductiveNumber}
+		\begin{align}
 	C(\tau, \rho) &= \int_{t = \tau}^{t= \rho} h(t) dt,\\
 	\omega (\tau, \rho) & = i(\tau) f(\rho - \tau),\\
-	i(\tau) & = h(\tau) y(\tau),
-	\end{align*}
+	i(t) & = h(t) y(t),
+	\end{align}
+	\end{subequations}
 	where $h(t)$ is some function of states and, in turn, time, and
 	$y(t)$ is the proportion of infectious individuals.
 	
@@ -54,16 +25,182 @@
 	
 	The second raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as follows
 	\begin{small}
-		\begin{align*} 
+		\begin{subequations}
+		\begin{align} 
 		C_2 &= \int_{\tau = 0}^\infty \int_{\rho = \tau}^\infty i(\tau) f(\rho-\tau) d\rho d\tau \int_{t=\tau}^{\rho} \int_{s=\tau}^{\rho} h(t) h(s) dt ds\\
 		&= 2 \int_{\tau = 0}^\infty \int_{\rho = \tau}^\infty 
 		\int_{t=s}^{\rho} \int_{s=\tau}^{t}i(\tau) f(\rho-\tau) d\rho d\tau  h(t) h(s) dt ds\\
-		& = 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds \underbrace{\int_{\rho = t}^\infty f(\rho - \tau) d\rho}_{F(t-\tau)}\\
+		& = 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds \underbrace{\int_{\rho = t}^\infty f(\rho - \tau) d\rho}_{F(t-\tau)} \label{eq_before_Markovian}\\
 		& = 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds \underbrace{F(t-\tau)}_{F(t-s)F(s-\tau)}\\
 		& = 2  \int_{t=s}^\infty \int_{s=\tau}^t h(t) F(t-s)h(s)ds\underbrace{\int_{\tau = 0}^{s} d\tau i(\tau)F(s-\tau)}_{y(s)}\\
 		& = 2  \int_{t=0}^\infty \int_{s=0}^t h(t)ds F(t-s)\underbrace{h(s) y(s)}_{i(s)}\\
 		& = 2  \int_{t=0}^\infty  h(t) \underbrace{\int_{s=0}^t ds F(t-s){i(s)}}_{y(t)}\\
-		& = 2 \int_{t=0}^\infty i(t) dt
-		\end{align*}
+		& = 2 \underbrace{\int_{t=0}^\infty i(t) dt}_{Z} \\
+		& = 2Z \label{eq_C2final}
+		\end{align}
+		\end{subequations}
 	\end{small}
+\subsection{Erlang infectious periods don't allow variance	above one}
+The survival function  of Erlang distribution is equal to 
+$$
+F(t) = \sum_{n=0}^{m-1} \frac{1}{n!} e^{-m t} (m t)^n.
+$$
+It has been shown that the Erlang distribution has an increasing failure rate, i.e., $\ln F(t)$ is concave, which, in turn, implies the following property \cite{marshall1972classes}
+\begin{equation}
+F(a +b) < F(a) F(b). \label{eq_submultiplicative}
+\end{equation}
+Given \eqref{eq_CaseReproductiveNumber} and in view of  \eqref{eq_before_Markovian}, the second raw moment of $C(\tau, \rho)$
+equals 
+\begin{align*}
+C_2 &= 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-\tau)\\
+ &\overset{\eqref{eq_submultiplicative}}{<} 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-s)F(s-\tau)\\
+\xrightarrow{\eqref{eq_C2final}} & < 2Z.
+\end{align*}
+Previously it has been shown that the mean of the expected case reproductive number, regardless of the infectious period distribution, is one yielding
+$$
+\frac{C_2}{Z} - 1 < 1.
+$$
+\subsubsection{Simulations for Erlang Distribution of Infectious Period}
+The following model was simulated
+\begin{align*}
+	\dot{x} &= -\beta(t) x^{\kappa + 1}y + m\gamma z ,\\
+	\dot{y}_1 &= \beta(t) x^{\kappa +1}y - my_1,\\
+	& \vdots\\
+	\dot{y}_m &= my_{m-1} - m y_m,\\
+	\dot{z} &= my_m - m\gamma z
+\end{align*}
+where 
+$\beta(t) = \beta_0\exp(\beta_1\sin(\omega t))$.
+The incidence is defined by 
+$$i(t) = \beta(t) x^{\kappa + 1}(t) y(t),$$
+ and the expected case reproductive number of individuals got infected at time $\tau$ and recovered at time $\rho$ is formulated as 
+$$C(\tau, \rho) = \int_{\tau}^{\rho} \beta(t) x^{\kappa +1} dt.$$
+Table \ref{table_1} reports the simulation result. 
+\begin{table}[ht]
+	\caption{Simulation results support the claim that the variance in the presence of Erlang distribution is less than one.}
+	\centering
+	\begin{tabular}{rrrrrrrrrrrrr}
+		\hline
+	No.	& step size & $\omega$ & $m$ & $\kappa$ & $\beta_0$ & $\beta_1$ & $\gamma$ & $\mu$ & within & between & Var $R_c$ & $\text{CV}^2$ \\ 
+		\hline
+		1 & 2000 & 0.16 &   1 &   0 & 3.00 & 0.90 & 0.50 & 1.01 & 0.98 & 0.02 & 1.01 & 1.00 \\ 
+		2 & 2000 & 0.16 &   2 &   0 & 3.00 & 0.90 & 0.50 & 1.00 & 0.49 & 0.01 & 0.51 & 0.51 \\ 
+		3 & 2000 & 0.16 &   5 &   0 & 3.00 & 0.90 & 0.50 & 1.00 & 0.20 & 0.01 & 0.21 & 0.21 \\ 
+		4 & 2000 & 0.16 &  10 &   0 & 3.00 & 0.90 & 0.50 & 1.00 & 0.10 & 0.01 & 0.11 & 0.11 \\ 
+		5 & 2000 & 0.16 &   1 &   0 & 2.00 & 0.90 & 0.50 & 1.01 & 0.95 & 0.04 & 1.01 & 1.00 \\ 
+		6 & 2000 & 0.16 &   2 &   0 & 2.00 & 0.90 & 0.50 & 1.00 & 0.48 & 0.03 & 0.52 & 0.51 \\ 
+		7 & 2000 & 0.16 &   5 &   0 & 2.00 & 0.90 & 0.50 & 1.00 & 0.20 & 0.02 & 0.22 & 0.22 \\ 
+		8 & 2000 & 0.16 &  10 &   0 & 2.00 & 0.90 & 0.50 & 1.00 & 0.10 & 0.02 & 0.12 & 0.12 \\ 
+		9 & 2000 & 0.16 &   1 &   0 & 1.50 & 0.90 & 0.50 & 1.01 & 0.92 & 0.08 & 1.01 & 1.00 \\ 
+		10 & 2000 & 0.16 &   2 &   0 & 1.50 & 0.90 & 0.50 & 1.01 & 0.47 & 0.06 & 0.53 & 0.53 \\ 
+		11 & 2000 & 0.16 &   5 &   0 & 1.50 & 0.90 & 0.50 & 1.00 & 0.19 & 0.04 & 0.24 & 0.23 \\ 
+		12 & 2000 & 0.16 &  10 &   0 & 1.50 & 0.90 & 0.50 & 1.00 & 0.10 & 0.04 & 0.14 & 0.13 \\ 
+		13 & 2000 & 0.10 &   1 & 0 &   4 &   1 & 1.00 & 1.00 & 0.99 & 0.01 & 1.00 & 1.01 \\ 
+		14 & 5000 & 0.10 &   1 & 0 &   4 &   1 & 0.50 & 1.00 & 0.54 & 0.46 & 1.00 & 1.00 \\ 
+		15 & 2000 & 0.10 &   2 & 0 &   4 &   1 & 1.00 & 1.02 & 0.27 & 0.44 & 0.71 & 0.73 \\ 
+		16 & 2000 & 0.10 &   1 & 0 &   4 &   2 & 1.00 & 1.00 & 0.97 & 0.03 & 1.00 & 1.00 \\ 
+		17 & 2000 & 0.10 &   2 & 0 &   4 &   2 & 1.00 & 1.03 & 0.24 & 0.49 & 0.73 & 0.78 \\ 
+		18 & 2000 & 0.10 &   3 & 0 &   4 &   1 & 1.00 & 1.02 & 0.13 & 0.55 & 0.69 & 0.72 \\ 
+		19 & 6000 & 0.10 &   3 & 0 &   4 &   1 & 1.00 & 1.00 & 0.13 & 0.57 & 0.70 & 0.70 \\ 
+		20 & 2000 & 0.00 &   1 & 0 &   2 &   0 & 0.00 & 1.00 & 0.83 & 0.16 & 1.00 & 1.00 \\ 
+		21 & 2000 & 0.00 &   1 & 1 &   2 &   0 & 0.00 & 1.00 & 0.86 & 0.14 & 1.00 & 1.00 \\ 
+		22 & 2000 & 0.00 &   1 & 0.50 &   2 &   0 & 0.00 & 1.00 & 0.85 & 0.15 & 1.00 & 1.00 \\ 
+		23 & 2000 & 0.00 &   2 & 0 &   2 &   0 & 0.00 & 1.00 & 0.41 & 0.17 & 0.58 & 0.58 \\ 
+		24 & 2000 & 0.00 &   2 & 0.50 &   2 &   0 & 0.00 & 1.00 & 0.42 & 0.15 & 0.58 & 0.58 \\ 
+		25 & 2000 & 0.00 &   2 & 1 &   2 &   0 & 0.00 & 1.00 & 0.43 & 0.14 & 0.57 & 0.57 \\
+		\hline
+	\end{tabular}
+\label{table_1}
+\end{table}
+\newpage
+	\subsection{Higher moments of the case reproductive number}
+\begin{align*}
+C(\tau, \rho) &= \beta \int_{t = \tau}^{t= \rho} x(t) dt,\\
+\omega (\tau, \rho) & = i(\tau) f(\rho - \tau),\\
+i(t) & = \beta x(t) y(t),
+\end{align*}
+where $x(t)$ and
+$y(t)$  are the proportions of susceptible and infectious individuals, respectively, 
+$\omega(\tau, \rho)$ is the size of individuals infected at time point $\tau$ and recovered at time point $\rho$,
+$f(t)$ is the distribution of residence time in the infectious compartment, and $i(t)$ is the incidence at time point $t$.
+
+
+The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as
+\begin{small}
+	\begin{align*} 
+	C_k &= \int \int i(\tau) f(\rho-\tau) d\tau d\rho \big (\int_{\tau}^{\rho} \beta x(s) ds \big )^k \\
+	&= \beta^k \int \int i(\tau) f(\rho-\tau) d\tau d\rho \underbrace{\int_{\tau}^{\rho} \cdots \int_{\tau}^{\rho}}_{k \text{ times}} x(t_1) \ldots x(t_k) dt_1 \ldots dt_k
+	\end{align*}
+	The integral of the symmetric $k$-variable function $x(t_1)\ldots x(t_k)$  over the hybercube $[\tau, \rho]^k$ is equal to $k!$ times the integral of the function over the region $\tau<t_1<t_2<\ldots<t_k < \rho$.
+	Hence, we have
+	\begin{align*}
+	&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k < \rho} \int \underbrace{\int \ldots \int}_{k \text{ times}}
+	i(\tau) f(\rho-\tau) d\rho d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \\
+	&= k! \beta^k \int_{\tau<t_1<t_2<\ldots<t_k } \underbrace{\int \ldots \int}_{k \text{ times}}
+	i(\tau)  d\tau x(t_1) \ldots x(t_k) dt_1 \ldots dt_k  \underbrace{\int_{\rho = t_k}^\infty f(\rho - \tau) d\rho}_{F(t_k-\tau)}
+	\end{align*}
+	Using the Markovian property, we have
+	\(F(t_k - \tau) = F(t_k - t_{k-1})\times F(t_{k-1} - t_{k-2}) \times \ldots \times F(t_1 - \tau) \).
+	By defining $t_0$ as $\tau$,
+	the term $ \int_{t_l<t_{l+1}} dt_l i(t_l) F(t_{l+1} - t_l)$, for $l \in {0,\ldots,k-1}$, is equal to $y(t_{l+1})$.
+	The multiplication of $y(t_{l+1})$ and $\beta x(t_{l+1})$ equals $i(t_{l+1}).$ 
+	By repeating the same procedure for $k$ times,
+	the remaining element would be $k! \int i(t_k) dt_k$.
+\end{small}
+	\section{Instantaneous case reproductive number}
+For the following SIR model,
+\begin{align*}
+\dot{x} &= - \beta(t)yx,\\
+\dot{y} &= \beta(t) yx -y,
+\end{align*}
+we define the instantaneous case reproductive number associated with cohorts infected at time point $\tau$ and recovered at time point $\rho$ as 
+$$R_i(\tau,\rho) = \beta(\tau)x(\tau)(\rho-\tau).$$
+The size of the cohort infected at $\tau$ and recovered at $\rho$ is equal to $w(\tau, \rho) = i(\tau) f(\rho-\tau).$
+$R_0$ is defined as
+\begin{align*}
+R_0 &= \int_{\tau}\int_{\rho} d\tau d\rho w(\tau,\rho)\\
+&= \int_{\tau} i(\tau) \\
+&= Z.
+\end{align*}
+The first raw moment of $R_i$ is then equal to 
+\begin{align*}
+R_1 &= \int_{\tau}\int_{\rho} d\tau d\rho w(\tau,\rho) \beta(\tau) x(\tau) (\rho-\tau)\\
+&= \int_{\tau}\int_{\rho} d\tau d\rho i(\tau) f(\rho-\tau) \beta(\tau) x(\tau) (\rho-\tau)\\
+&=\int_{\tau} d\tau \beta(\tau) x(\tau) i(\tau) \underbrace{\int_{\rho > \tau} f(\rho - \tau)(\rho - \tau)d\rho}_{\text{mean of infectious period}=T_{\text{inf}}}
+\end{align*}
+In the case of a constant transmission rate ($\beta(t) = \beta$), $R_1$ will reduce to $\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau.$
+The mean of $R_i$ is then
+$$
+\mu = \frac{\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau}{Z}.
+$$
+The second raw moment of $R_i$ is equal to 
+\begin{align*}
+R_2 &= \int_{\tau}\int_{\rho} d\tau d\rho i(\tau) f(\rho-\tau) \beta^2(\tau) x^2(\tau) (\rho-\tau)^2\\
+&=\int_{\tau} d\tau \beta^2(\tau) x^2(\tau) i(\tau) \underbrace{\int_{\rho > \tau} f(\rho - \tau)(\rho - \tau)^2d\rho}_{\text{Var}_{\text{inf}} +T^2_{\text{inf}}},
+\end{align*}
+where $\text{Var}_{\text{inf}}$ is the variance of the infectious distribution.
+In the case of a constant transmission rate ($\beta(t) = \beta$), $R_2$ will reduce to $(\text{Var}_{\text{inf}} + T_{\text{inf}}^2)\beta^2\int_\tau x(\tau)^2i(\tau)d\tau$, and the variance of $R_i$ reads as 
+$$
+\frac{(\text{Var}_{\text{inf}} + T_{\text{inf}}^2)\beta^2\int_\tau x(\tau)^2i(\tau)d\tau}{Z} - \frac{\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau}{Z}.
+$$
+\subsection{Simulation}
+\begin{table}[ht]
+	\caption{The mean and variance of $R_i$ under an exponential distribution of the infectious period.}
+	\centering
+	\begin{tabular}{rrrrrrrrrrr}
+		\hline
+		No. & $\beta_0$ & $\beta_1$ & $\gamma$ & $\omega$ & $Z$ & $\mu$ & within (CV$^2$) & between (CV$^2$) & Var $R_c$ & (CV$^2$) \\ 
+		\hline
+		1 & 1.50 & & 0.00 & 0.00 & 0.58 & 1.06 & 1.06 & 0.06 & 1.26 & 1.11 \\ 
+		2 & 2.00 &  & 0.00 & 0.00 & 0.80 & 1.20 & 1.15 & 0.15 & 1.87 & 1.29 \\ 
+		3 & 5.00 &  & 0.00 & 0.00 & 0.99 & 2.52 & 1.33 & 0.32 & 10.45 & 1.65 \\ 
+		4 & 2.00 & & 0.50 & 0.00 & 33.77 & 1.01 & 1.01 & 0.01 & 1.03 & 1.01 \\ 
+		5 & 2.00 & 0.50 & 0.50 & 0.10 & 33.61 & 1.02 & 1.04 & 0.04 & 1.12 & 1.07 \\ 
+		6 & 2.00 & 0.50 & 0.50 & 0.16 & 33.62 & 1.03 & 1.04 & 0.04 & 1.14 & 1.09 \\ 
+		\hline
+	\end{tabular}
+\end{table}
+\newpage
+\bibliographystyle{plain}
+\bibliography{ref}
 \end{document}
