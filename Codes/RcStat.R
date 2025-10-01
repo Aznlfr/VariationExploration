@@ -72,7 +72,6 @@ outbreakStats <- function(kpa = 0
                           , omega=0
                           , B0=1
                           , B1 = 0
-                          , y0=1e-3
                           #  , tmult=6
                           , cohortProp=0.6
                           , steps=300
@@ -80,9 +79,12 @@ outbreakStats <- function(kpa = 0
                           , cars = 1
                           , gmma = 0
                           , finTime = 365
+                          , yint = NULL
 ){
+  if(is.null(yint)){t0<-0}
+  else{t0<-yint$time}
   mySim<- sim(kpa = kpa, omega=omega, B0=B0, B1=B1, timeStep=finTime/steps,
-              y0 = y0, finTime=finTime, dfun=dfun, cars=cars, gmma=gmma
+              finTime=finTime, dfun=dfun, cars=cars, gmma=gmma,  yvec0 = yint
   )
   with(mySim, {
     #sdat, cohort, ST, tol=1e-4, cars, omega, B0, B1, kpa
@@ -98,7 +100,7 @@ outbreakStats <- function(kpa = 0
       y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0)
       , func=oderivs
       , times=unlist(cStats$cohort)
-      , parms=list( B0 = B0, B1=B1, omega=omega,
+      , parms=list( B0 = B0, B1=B1, omega=omega, t0=t0,
                     ifun=ifun, rcfun=rcfun, varrcfun=varrcfun,
                     wssfun = wssfun))
     )
