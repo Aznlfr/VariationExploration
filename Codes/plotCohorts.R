@@ -1,10 +1,8 @@
-
 library(ggplot2)
 library(dplyr)
 library(purrr)
 library(patchwork)
 source("RcStat.R")
-source("CommonFs.R")
 B0 <- c(1.5,2,4)
 B1<-1
 steps<-2e3
@@ -13,6 +11,8 @@ omega<-pi/30
 cars<-1
 gmma<-1
 finTime<-365
+y0 <-1e-9
+t0 <-0
 xlimits<-finTime
 cohorts <- map_dfr(B0, function(B0){
   return(data.frame(sapply(cohortStatsRcPlot(kpa = kpa
@@ -23,8 +23,9 @@ cohorts <- map_dfr(B0, function(B0){
                                              , cars = cars
                                              , gmma = gmma
                                              , finTime = finTime
-                                             , yint = NULL
-                                             , maxCohort = 0.6*finTime
+                                             , y0 = y0
+                                             , t0=t0
+                                             , cohortProp = 0.6
                                              ),
                            unlist), B0 = B0))
 }
@@ -34,7 +35,7 @@ straightSim <- map_dfr(B0, function(B0){
   return(data.frame(sim(kpa = kpa, omega=omega, B0=B0, B1=B1, 
                         timeStep=finTime/steps,
                         finTime=finTime,  cars=cars,
-                        gmma=gmma, yvec0 = NULL
+                        gmma=gmma, y0 = 1e-9, t0 = t0
   ), B0 = B0))
 }
 )
@@ -107,8 +108,8 @@ ri  <- straightSim |>
   plot_annotation(title = paste0("omega:", round(omega, digits=3), ", B1: ",
                                  B1, ", gamma:",gmma))
 
- if (!dir.exists("output")) dir.create("output", recursive = TRUE)
-ggsave("output/cohortPlotRiandRc.pdf", plot = finalp, width = 7, height = 5,
+ if (!dir.exists("plots")) dir.create("output", recursive = TRUE)
+ggsave("plots/cohortPlotRiandRc.pdf", plot = finalp, width = 7, height = 5,
        units = "in")
 
 

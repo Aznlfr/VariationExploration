@@ -1,4 +1,3 @@
-source("CommonFs.R")
 source("RcStat.R")
 library(xtable)
 # beta(t) = B0 exp(B1 sin(omega t))
@@ -14,7 +13,7 @@ grid <- expand.grid(omg = omega, B0=B0)
 res_mat <- as.data.frame(t(mapply(outbreakStats, omega= grid$omg, B0=grid$B0,
                      MoreArgs = list(B1 = B1,  gmma=gmma,
                            cars=cars, kpa=kpas, steps=steps,
-                           yint=NULL
+                           t0=t0, finTime = 150
                            ))))
 
 xtable(res_mat, row.names=FALSE)
