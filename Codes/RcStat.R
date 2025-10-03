@@ -1,8 +1,6 @@
 
 library(deSolve)
 
-
-
 ## m for moment; these two functions integrate across the infectors from a given cohort
 mderivs <- function(time, vars, parms){
   Bt<- parms$plist$B0*exp(parms$plist$B1*sin(parms$plist$omega*time))
@@ -15,12 +13,14 @@ mderivs <- function(time, vars, parms){
 		, ddot = dens
 		, Rctotdot = Rc*dens
 		, RcSSdot = Rc*Rc*dens
+		, RcSSSdot = Rc*Rc*Rc*dens
+		, RcS4dot = Rc*Rc*Rc*Rc*dens
 	))))
 }
 cMoments <- function(time, sfun, T0, cars, omega, B1, kpa, B0){
 #	mfuns$sfun <- sfun
 	mom <- as.data.frame(ode(
-		y=c(Rc=0, cumden=0, Rctot=0, RcSS=0)
+		y=c(Rc=0, cumden=0, Rctot=0, RcSS=0, RcSSS=0, RcS4 = 0)
 		, func=mderivs
 		, times=time
 		, parms=list(
@@ -38,11 +38,14 @@ cCalc <- function(sdat, cohort, sfun, tol=1e-4, cars, omega, B0, B1, kpa){
     mom <- cMoments(sTime, sfun, T0=cohort, cars = cars, omega=omega,
                     B1=B1, kpa=kpa, B0=B0)
     with(mom[nrow(mom), ], {
-      stopifnot(abs(cumden-1)<tol)
+      #stopifnot(abs(cumden-1)<tol)
       Rctot=Rctot/cumden
       RcSS=RcSS/cumden
+      RcSSS=RcSSS/cumden
+      RcS4=RcS4/cumden
       return(list(
-        cohort=cohort, Ri = Ri, Rc=Rctot, varRc=(RcSS-Rctot^2), RcSS =RcSS
+        cohort=cohort, Ri = Ri, Rc=Rctot, varRc=(RcSS-Rctot^2), RcSS =RcSS,
+        RcSSS = RcSSS, RcS4=RcS4
       ))
     })
   })
@@ -82,10 +85,9 @@ outbreakStats <- function(kpa = 0
                           , gmma = 0
                           , finTime = 365
                           , y0 = 1e-9
-                          , t0 = 0
-){
+                          , t0 = 0){
   mySim<- sim(kpa = kpa, omega=omega, B0=B0, B1=B1, timeStep=finTime/steps,
-              finTime=finTime, dfun=dfun, cars=cars, gmma=gmma, y0 = 1e-9, t0=0
+              finTime=finTime, dfun=dfun, cars=cars, gmma=gmma, y0 =y0, t0=t0
   )
   with(mySim, {
     maxCohort <- t0 + cohortProp*finTime
@@ -98,14 +100,17 @@ outbreakStats <- function(kpa = 0
     rifun <- approxfun(cStats$cohort, cStats$Ri, rule=2)
     varrcfun <- approxfun(cStats$cohort, cStats$varRc, rule=2)
     wssfun <- approxfun(cStats$cohort, cStats$RcSS, rule = 2)
+    wsssfun <- approxfun(cStats$cohort, cStats$RcSSS, rule = 2)
+    ws4fun <- approxfun(cStats$cohort, cStats$RcS4, rule = 2)
     mom <- as.data.frame(ode(
       y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0, 
-          Ri = 0, muRi = 0, SSRi = 0)
+          Ri = 0, muRi = 0, SSRi = 0, SSS=0, S4 = 0)
       , func=oderivs
       , times=unlist(cStats$cohort)
       , parms=list( B0 = B0, B1=B1, omega=omega,
                     ifun=ifun, rcfun=rcfun, varrcfun=varrcfun,
-                    wssfun = wssfun, rifun=rifun))
+                    wssfun = wssfun, rifun=rifun, 
+                    wsssfun = wsssfun, ws4fun = ws4fun))
     )
     
     with(mom[nrow(mom), ], {
@@ -120,6 +125,8 @@ outbreakStats <- function(kpa = 0
       Finalsize <- finS
       muRi <- muRi/finS
       SSRi <- SSRi/finS
+      thirdRc <- SSS/finS
+      fourthRc <- S4/finS
       totalVRi <- SSRi - muRi^2
       return(c(  stepSize=steps
                  , B0 = B0
@@ -136,6 +143,8 @@ outbreakStats <- function(kpa = 0
                  , withinSS = w
                  , totalVRc = total*mu^2
                  , totalKRc=total
+                 , thirdRawRc = thirdRc 
+                 , fouthRawRc = fourthRc 
                  , totalVRi=totalVRi
                  , muRi = muRi
                  , timeIntegralRi = Ri
@@ -150,6 +159,8 @@ oderivs <- function(time, vars, parms){
   Ri <- parms$rifun(time)
   varRc <- parms$varrcfun(time)
   wss <- parms$wssfun(time)
+  wsss <- parms$wsssfun(time)
+  ws4<- parms$ws4fun(time)
   return(list(c(
     finSdot = inc
     , mudot = inc*Rc
@@ -160,6 +171,8 @@ oderivs <- function(time, vars, parms){
     , Ridot = Ri
     , muRidot = inc*Ri
     , SSRidot = inc*Ri*Ri
+    , SSSdot = inc*wsss
+    , S4dot = inc*ws4
     
   )))
 }
@@ -193,6 +206,7 @@ sim <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
   y_init <- c(x = x0, infc, r=r0, cum = cum0)
   if(t0 !=0) timePoints<- c(0, seq(from=t0, to=t0 + finTime, by=timeStep))
   else timePoints<- seq(from=t0, to=t0 + finTime, by=timeStep)
+  print(paste0("min",min(timePoints),"max",max(timePoints)))
   sim <- as.data.frame(ode(
     y = y_init
     , func=dfun

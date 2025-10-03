@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 \usepackage{amsmath}
-
+\usepackage{cleveref}
 \title{Variance exploration}
 % \author{aaghaeeyan }
 % \date{September 2025}
@@ -40,6 +40,45 @@ Assume that the following relation between the incidence, $i$, and the expected 
 		\end{align}
 		\end{subequations}
 	\end{small}
+\subsubsection{Numerical Simulations}
+For simulation, we consider the following compartmental model
+\begin{subequations} \label{eq_Erlang}
+	\begin{align}
+	\dot{x} &= -\beta(t) x^{\kappa + 1}y + m\gamma z ,\\
+	\dot{y}_1 &= \beta(t) x^{\kappa +1}y - my_1,\\
+	& \vdots\\
+	\dot{y}_m &= my_{m-1} - m y_m,\\
+	\dot{z} &= my_m - m\gamma z,
+	\end{align}
+\end{subequations}
+where 
+$\beta(t) = \beta_0\exp(\beta_1\sin(\omega t))$.
+\begin{figure}
+\includegraphics[width=1\linewidth, trim=0cm 0cm 0cm 1cm, clip]{Codes/plots/cohortPlotRiandRc.pdf}
+\caption{A seasonally forced epidemic with a period of $60$ (\Cref{eq_Erlang} with $m=1$, $\gamma=1$, $\kappa=0$).
+	Panels d and e depict the mean and variance in cohort's case reproductive number, respectively. 
+	The transmission rate is periodic with a three-month period (panel c).
+The instantaneous reproductive number is plotted in panel f.
+}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{Codes/plots/barPlotRc.pdf}
+	\caption{Variance in the case reproductive number remains constant regardless of seasonally forced periods ($\omega = 0, \pi/30\approx 0.105, \pi/20 \approx 0.314$) and  average transmission rate ($\beta_0 = 1.5,2,3,4,5$). 
+The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$, $\kappa=0$), and the immunity waning rate is set to 1 (\Cref{eq_Erlang}, $\gamma=1$).
+The length of simulation is $365$.
+	}
+\end{figure}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{Codes/plots/barPlotRi.pdf}
+	\caption{Calculated variance in the instantaneous reproductive number for different seasonally forced periods ($\omega = 0, \pi/30\approx 0.105, \pi/20 \approx 0.314$) and average transmission rates ($\beta_0 = 1.5,2,3,4,5$). 
+	The instantaneous reproductive number ($R_i(\tau) = \beta(\tau)x(\tau)$)
+	is shared among the individuals in the same cohort share, and, accordingly, the calculated variance stems from the between-cohort variance.
+		The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$), and the immunity waning rate is set to 1 (\Cref{eq_Erlang}, $\gamma=1$).
+		The length of simulation is $365$.
+	}
+\end{figure}
 \subsection{Erlang infectious periods don't allow variance	above one}
 The survival function  of Erlang distribution is equal to 
 $$
@@ -61,17 +100,7 @@ $$
 \frac{C_2}{Z} - 1 < 1.
 $$
 \subsubsection{Simulations for Erlang Distribution of Infectious Period}
-The following model was simulated
-\begin{align*}
-	\dot{x} &= -\beta(t) x^{\kappa + 1}y + m\gamma z ,\\
-	\dot{y}_1 &= \beta(t) x^{\kappa +1}y - my_1,\\
-	& \vdots\\
-	\dot{y}_m &= my_{m-1} - m y_m,\\
-	\dot{z} &= my_m - m\gamma z
-\end{align*}
-where 
-$\beta(t) = \beta_0\exp(\beta_1\sin(\omega t))$.
-The incidence is defined by 
+The incidence for the model \Cref{eq_Erlang} is defined by 
 $$i(t) = \beta(t) x^{\kappa + 1}(t) y(t),$$
  and the expected case reproductive number of individuals got infected at time $\tau$ and recovered at time $\rho$ is formulated as 
 $$C(\tau, \rho) = \int_{\tau}^{\rho} \beta(t) x^{\kappa +1} dt.$$
@@ -126,7 +155,6 @@ $f(t)$ is the distribution of residence time in the infectious compartment, and 
 
 
 The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\rho)$ reads as
-\begin{small}
 	\begin{align*} 
 	C_k &= \int \int i(\tau) f(\rho-\tau) d\tau d\rho \big (\int_{\tau}^{\rho} \beta x(s) ds \big )^k \\
 	&= \beta^k \int \int i(\tau) f(\rho-\tau) d\tau d\rho \underbrace{\int_{\tau}^{\rho} \cdots \int_{\tau}^{\rho}}_{k \text{ times}} x(t_1) \ldots x(t_k) dt_1 \ldots dt_k
@@ -146,60 +174,53 @@ The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\r
 	The multiplication of $y(t_{l+1})$ and $\beta x(t_{l+1})$ equals $i(t_{l+1}).$ 
 	By repeating the same procedure for $k$ times,
 	the remaining element would be $k! \int i(t_k) dt_k$.
-\end{small}
+	Hence, the $k$th normalized moment, defined as $C_k/Z$ is equal to $k!.$
+	\subsection{Simulation Results}
+	We calculated the third and fourth normalized moments of $R_c$ for a simple SIR model.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Codes/plots/highermoments.pdf}
+	\caption{Simulation results support the conjecture that the third and fourth normalized raw moments are equal to $3!=6$ and $4!=24$ regardless of $R_0$ in a simple SIR model.}
+\end{figure}
 	\section{Instantaneous case reproductive number}
 For the following SIR model,
 \begin{align*}
 \dot{x} &= - \beta(t)yx,\\
 \dot{y} &= \beta(t) yx -y,
 \end{align*}
-we define the instantaneous case reproductive number associated with cohorts infected at time point $\tau$ and recovered at time point $\rho$ as 
-$$R_i(\tau,\rho) = \beta(\tau)x(\tau)(\rho-\tau).$$
-The size of the cohort infected at $\tau$ and recovered at $\rho$ is equal to $w(\tau, \rho) = i(\tau) f(\rho-\tau).$
-$R_0$ is defined as
+we define the instantaneous case reproductive number associated with cohorts infected at time point $\tau$ as 
+\[R_i(\tau) = \beta(\tau)x(\tau)\]
+Zeroth moment of $R_i$ is defined as
 \begin{align*}
-R_0 &= \int_{\tau}\int_{\rho} d\tau d\rho w(\tau,\rho)\\
+R_0 
 &= \int_{\tau} i(\tau) \\
 &= Z.
 \end{align*}
 The first raw moment of $R_i$ is then equal to 
 \begin{align*}
-R_1 &= \int_{\tau}\int_{\rho} d\tau d\rho w(\tau,\rho) \beta(\tau) x(\tau) (\rho-\tau)\\
-&= \int_{\tau}\int_{\rho} d\tau d\rho i(\tau) f(\rho-\tau) \beta(\tau) x(\tau) (\rho-\tau)\\
-&=\int_{\tau} d\tau \beta(\tau) x(\tau) i(\tau) \underbrace{\int_{\rho > \tau} f(\rho - \tau)(\rho - \tau)d\rho}_{\text{mean of infectious period}=T_{\text{inf}}}
+R_1 &= \int_{\tau}d\tau i(\tau)\beta(\tau) x(\tau)
 \end{align*}
-In the case of a constant transmission rate ($\beta(t) = \beta$), $R_1$ will reduce to $\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau.$
-The mean of $R_i$ is then
-$$
-\mu = \frac{\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau}{Z}.
-$$
 The second raw moment of $R_i$ is equal to 
 \begin{align*}
-R_2 &= \int_{\tau}\int_{\rho} d\tau d\rho i(\tau) f(\rho-\tau) \beta^2(\tau) x^2(\tau) (\rho-\tau)^2\\
-&=\int_{\tau} d\tau \beta^2(\tau) x^2(\tau) i(\tau) \underbrace{\int_{\rho > \tau} f(\rho - \tau)(\rho - \tau)^2d\rho}_{\text{Var}_{\text{inf}} +T^2_{\text{inf}}},
+R_2 &= \int_{\tau} d\tau  i(\tau)  \beta^2(\tau) x^2(\tau) 
 \end{align*}
-where $\text{Var}_{\text{inf}}$ is the variance of the infectious distribution.
-In the case of a constant transmission rate ($\beta(t) = \beta$), $R_2$ will reduce to $(\text{Var}_{\text{inf}} + T_{\text{inf}}^2)\beta^2\int_\tau x(\tau)^2i(\tau)d\tau$, and the variance of $R_i$ reads as 
-$$
-\frac{(\text{Var}_{\text{inf}} + T_{\text{inf}}^2)\beta^2\int_\tau x(\tau)^2i(\tau)d\tau}{Z} - \frac{\beta T_{\text{inf}}\int_\tau x(\tau)i(\tau)d\tau}{Z}.
-$$
-\subsection{Simulation}
-\begin{table}[ht]
-	\caption{The mean and variance of $R_i$ under an exponential distribution of the infectious period.}
+
+I calculated the time integral of $R_i$ over one period
+$(\gamma = 1, \omega = \pi/30, \beta_0 = 2, \beta_1 =1)$, starting
+from the cycle. 
+\begin{align*}
+\int_{2\pi/\omega} R_i(\tau)d\tau &= 40.5,\\
+  \mu = \frac{\int_{2\pi/\omega} R_i(\tau) i(\tau) d\tau}{\int_{2\pi/\omega} i(\tau)d\tau} &= 1.056,\\ \frac{\int_{2\pi/\omega} R_i^2(\tau) i(\tau) d\tau}{\int_{2\pi/\omega} i(
+	\tau)d\tau} - \mu^2 &= 0.034.
+\end{align*}
+\begin{figure}
 	\centering
-	\begin{tabular}{rrrrrrrrrrr}
-		\hline
-		No. & $\beta_0$ & $\beta_1$ & $\gamma$ & $\omega$ & $Z$ & $\mu$ & within (CV$^2$) & between (CV$^2$) & Var $R_c$ & (CV$^2$) \\ 
-		\hline
-		1 & 1.50 & & 0.00 & 0.00 & 0.58 & 1.06 & 1.06 & 0.06 & 1.26 & 1.11 \\ 
-		2 & 2.00 &  & 0.00 & 0.00 & 0.80 & 1.20 & 1.15 & 0.15 & 1.87 & 1.29 \\ 
-		3 & 5.00 &  & 0.00 & 0.00 & 0.99 & 2.52 & 1.33 & 0.32 & 10.45 & 1.65 \\ 
-		4 & 2.00 & & 0.50 & 0.00 & 33.77 & 1.01 & 1.01 & 0.01 & 1.03 & 1.01 \\ 
-		5 & 2.00 & 0.50 & 0.50 & 0.10 & 33.61 & 1.02 & 1.04 & 0.04 & 1.12 & 1.07 \\ 
-		6 & 2.00 & 0.50 & 0.50 & 0.16 & 33.62 & 1.03 & 1.04 & 0.04 & 1.14 & 1.09 \\ 
-		\hline
-	\end{tabular}
-\end{table}
+	\includegraphics[width=0.8\linewidth]{Codes/plots/RiMoments.pdf}
+	\caption{The instantaneous reproductive number in a simple SIR model. The left panel shows the time integral of $R_i$ over $150$ days ($\int R_i(\tau)d\tau$). 
+	The  incidence-weighted mean of $R_i$ ($\mu = \frac{\int R_i(\tau) i(\tau) d\tau}{\int i(\tau)d\tau}$) is plotted in the middle panel, and 
+   the variance in $R_i$ ($\frac{\int R_i^2(\tau) i(\tau) d\tau}{\int i(
+   	\tau)d\tau} - \mu^2$) is depicted in the right panel. }
+\end{figure}
 \newpage
 \bibliographystyle{plain}
 \bibliography{ref}
