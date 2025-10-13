@@ -1,44 +1,44 @@
-
+library(shellpipes)
+rpcall("Codes/RcStat.Rout Codes/RcStat.R")
 library(deSolve)
-
+loadEnvironments()
 ## m for moment; these two functions integrate across the infectors from a given cohort
 mderivs <- function(time, vars, parms){
-  Bt<- parms$plist$B0*exp(parms$plist$B1*sin(parms$plist$omega*time))
-  Sp<-parms$flist$sfun(time)
-	Ri <- Bt*Sp*Sp^parms$plist$kpa
+  Bt<- parms$plist$B0*exp(parms$plist$alpha*sin(parms$plist$omega*time))
+  Sp<-parms$flist$sfun(time) #fraction of susceptible
+	Ri <- Bt*Sp^(parms$plist$kpa +1)
 	dens <- with(parms$plist,
 	             cars^cars*(time - T0)^(cars-1)*exp(-cars*(time - T0))/factorial(cars-1))
 	return(with(c(parms, vars), list(c(
-	    Rcdot = Ri
-		, ddot = dens
-		, Rctotdot = Rc*dens
-		, RcSSdot = Rc*Rc*dens
-		, RcSSSdot = Rc*Rc*Rc*dens
-		, RcS4dot = Rc*Rc*Rc*Rc*dens
+	    Ri
+		, dens
+		, Rc*dens
+		, Rc*Rc*dens
+		, Rc*Rc*Rc*dens
+		, Rc*Rc*Rc*Rc*dens
 	))))
 }
-cMoments <- function(time, sfun, T0, cars, omega, B1, kpa, B0){
-#	mfuns$sfun <- sfun
+
+cMoments <- function(time, sfun, T0, cars, omega, alpha, kpa, B0){
 	mom <- as.data.frame(ode(
 		y=c(Rc=0, cumden=0, Rctot=0, RcSS=0, RcSSS=0, RcS4 = 0)
 		, func=mderivs
 		, times=time
 		, parms=list(
-			plist=list(T0=T0, cars=cars, omega=omega, B1=B1, kpa = kpa, B0=B0)
+			plist=list(T0=T0, cars=cars, omega=omega, alpha=alpha, kpa = kpa, B0=B0)
 			, flist=list(sfun=sfun)
 		)
 	))
 	return(mom)
 }
-cCalc <- function(sdat, cohort, sfun, tol=1e-4, cars, omega, B0, B1, kpa){
-  with(sdat, {
-    Bcohort<-B0*exp(B1*sin(omega*cohort))
+cCalc <- function(time, cohort, sfun, tol=1e-4, cars, omega, B0, alpha, kpa){
+    Bcohort<-B0*exp(alpha*sin(omega*cohort))
     Ri <- Bcohort*sfun(cohort)^(kpa + 1)
     sTime <- time[time>=cohort]
-    mom <- cMoments(sTime, sfun, T0=cohort, cars = cars, omega=omega,
-                    B1=B1, kpa=kpa, B0=B0)
+    mom <- cMoments(sTime, sfun, T0=cohort, cars=cars, omega=omega,
+                    alpha=alpha, kpa=kpa, B0=B0)
     with(mom[nrow(mom), ], {
-      #stopifnot(abs(cumden-1)<tol)
+      stopifnot(abs(cumden-1)<tol)
       Rctot=Rctot/cumden
       RcSS=RcSS/cumden
       RcSSS=RcSSS/cumden
@@ -48,13 +48,12 @@ cCalc <- function(sdat, cohort, sfun, tol=1e-4, cars, omega, B0, B1, kpa){
         RcSSS = RcSSS, RcS4=RcS4
       ))
     })
-  })
 }
 
 cohortStats <- function(kpa = 0
                         , omega = 0
                         , B0 = 1
-                        , B1 = 0
+                        , alpha = 0
                         , sdat = NULL
                         , maxCohort = NULL
                         , cohortProp=0.6
@@ -64,11 +63,11 @@ cohortStats <- function(kpa = 0
   sfun <- approxfun(sdat$time, sdat$x, rule=2)
   cohorts <- with(sdat, time[time<=maxCohort])
   return(as.data.frame(t(
-    sapply(cohorts, function(c) cCalc(sdat = sdat, cohort=c, sfun=sfun, tol=1e-4,
+    sapply(cohorts, function(c) cCalc(sdat$time, cohort=c, sfun=sfun, tol=1e-4,
                                       cars=cars,
                                       omega = omega,
                                       B0 = B0,
-                                      B1 = B1,
+                                      alpha = alpha,
                                       kpa = kpa
     ))
   )))
@@ -76,23 +75,24 @@ cohortStats <- function(kpa = 0
 outbreakStats <- function(kpa = 0
                           , omega=0
                           , B0=1
-                          , B1 = 0
+                          , alpha = 0
                           #  , tmult=6
                           , cohortProp=0.6
                           , steps=300
                           , dfun = boxcar
                           , cars = 1
-                          , gmma = 0
+                          , sigma = 0
                           , finTime = 365
                           , y0 = 1e-9
                           , t0 = 0){
-  mySim<- sim(kpa = kpa, omega=omega, B0=B0, B1=B1, timeStep=finTime/steps,
-              finTime=finTime, dfun=dfun, cars=cars, gmma=gmma, y0 =y0, t0=t0
+  mySim<- sim(kpa = kpa, omega=omega, B0=B0, alpha=alpha, timeStep=finTime/steps,
+              finTime=finTime, dfun=dfun, cars=cars, sigma=sigma, y0 =y0, t0=t0
   )
   with(mySim, {
     maxCohort <- t0 + cohortProp*finTime
     ifun <- approxfun(time, y*x^(kpa + 1), rule=2)
-    cStats <- cohortStats(kpa = kpa, omega = omega, B0 = B0, B1=B1,
+    #ifun <- approxfun(time, inc, rule=2)
+    cStats <- cohortStats(kpa = kpa, omega = omega, B0 = B0, alpha=alpha,
                           sdat=mySim,
                           maxCohort=maxCohort, 
                           cars=cars)
@@ -104,24 +104,33 @@ outbreakStats <- function(kpa = 0
     ws4fun <- approxfun(cStats$cohort, cStats$RcS4, rule = 2)
     mom <- as.data.frame(ode(
       y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0, 
-          Ri = 0, muRi = 0, SSRi = 0, SSS=0, S4 = 0)
+          Ri = 0, muRi = 0, SSRi = 0, SSRiTime=0, SSS=0, S4 = 0,
+          SStime = 0, mutime=0,
+          ttime=0, withinTime=0, betweenTime=0)
       , func=oderivs
       , times=unlist(cStats$cohort)
-      , parms=list( B0 = B0, B1=B1, omega=omega,
+      , parms=list( B0 = B0, alpha=alpha, omega=omega,
                     ifun=ifun, rcfun=rcfun, varrcfun=varrcfun,
                     wssfun = wssfun, rifun=rifun, 
                     wsssfun = wsssfun, ws4fun = ws4fun))
     )
     
     with(mom[nrow(mom), ], {
+      SStime <- SStime/ttime
+      mutime <- mutime/ttime
+      totalVtime <- SStime - mutime^2
+      withinTime <- withinTime/ttime
+      betweenTime <- betweenTime/ttime -mutime^2
+      muRiTime<-Ri/ttime
+      SSRiTime <- SSRiTime/ttime - muRiTime^2
       mu <- mu/finS
       SS <- SS/finS
       w <- w/finS
-      checkV <- (checkV/finS)/mu^2
-      within <- (V/finS)/mu^2
-      between <- (SS-mu^2)/mu^2
+      checkV <- (checkV/finS)
+      within <- (V/finS)
+      between <- (SS-mu^2)
       total = within + between
-      otherCheck = (w-mu^2)/mu^2
+      otherCheck = (w-mu^2)
       Finalsize <- finS
       muRi <- muRi/finS
       SSRi <- SSRi/finS
@@ -130,8 +139,8 @@ outbreakStats <- function(kpa = 0
       totalVRi <- SSRi - muRi^2
       return(c(  stepSize=steps
                  , B0 = B0
-                 , B1 = B1
-                 , gamma = gmma
+                 , alpha = alpha
+                 , sigma = sigma
                  , omega = omega
                  , cars = cars
                  , kpa = kpa
@@ -141,39 +150,51 @@ outbreakStats <- function(kpa = 0
                  , checkWithin = checkV
                  , between=between
                  , withinSS = w
-                 , totalVRc = total*mu^2
-                 , totalKRc=total
+                 , totalVRc = total
+                 , totalVRc_simplified = otherCheck
+                 , totalKRc=total/mu^2
                  , thirdRawRc = thirdRc 
                  , fouthRawRc = fourthRc 
                  , totalVRi=totalVRi
                  , muRi = muRi
-                 , timeIntegralRi = Ri
+                 , muRiTime = muRiTime
+                 , totalVtimeRi = SSRiTime
+                 , totalVtime = totalVtime
+                 , withinTime = withinTime
+                 , betweenTime = betweenTime
       ))
     })
   })
 }
+
 oderivs <- function(time, vars, parms){
-  Bt<-parms$B0*exp(parms$B1*sin(parms$omega*(time)))
+  Bt<-parms$B0*exp(parms$alpha*sin(parms$omega*(time)))
   inc <- Bt*parms$ifun(time)
+  #inc <- parms$ifun(time)
   Rc <- parms$rcfun(time)
   Ri <- parms$rifun(time)
   varRc <- parms$varrcfun(time)
   wss <- parms$wssfun(time)
   wsss <- parms$wsssfun(time)
-  ws4<- parms$ws4fun(time)
-  return(list(c(
-    finSdot = inc
-    , mudot = inc*Rc
-    , SSdot = inc*Rc*Rc
-    , Vdot = inc*varRc
-    , wdot = inc*wss
-    , checkVdot = inc*(wss - Rc^2)
-    , Ridot = Ri
-    , muRidot = inc*Ri
-    , SSRidot = inc*Ri*Ri
-    , SSSdot = inc*wsss
-    , S4dot = inc*ws4
-    
+  ws4 <- parms$ws4fun(time)
+  return(list(c(  
+    inc #finS
+    ,inc*Rc #mu
+    ,inc*Rc*Rc #RSS
+    ,inc*varRc #V
+    ,inc*wss #w
+    ,inc*(wss - Rc^2) #checkV
+    ,Ri #Ri
+    ,inc*Ri #muRi
+    ,inc*Ri*Ri #SSRi
+    , Ri*Ri
+    ,inc*wsss #SSS
+    ,inc*ws4 #S4
+    ,wss #timeRSS
+    ,Rc #timeRc
+    ,1 #time
+    ,varRc #timeWithin
+    ,Rc*Rc #time between
   )))
 }
 boxcar <- function(time, vars, parms){
@@ -181,14 +202,14 @@ boxcar <- function(time, vars, parms){
     yvec <- (unlist(mget(paste0("y", 1:cars))))
     y <- sum(yvec)
     ydots <- numeric(cars)
-    Bt<- B0*exp(B1*sin(omega*time))
-    xdot <- -Bt*y*x*x^kpa + cars*gmma*r
-    ydots[[1]] <- Bt*y*x*x^kpa - cars*yvec[[1]]
-    cumdot <- Bt*y*x*x^kpa
+    Bt<- B0*exp(alpha*sin(omega*time))
+    xdot <- -Bt*y*x^(kpa+1) + cars*sigma*r
+    ydots[[1]] <- Bt*y*x^(kpa+1) - cars*yvec[[1]]
+    cumdot <- Bt*y*x^(kpa+1)
     if (cars > 1) {
       ydots[2:cars] <- cars * (yvec[1:(cars - 1)] - yvec[2:cars])
     }
-    rdot <- cars*yvec[[cars]] - cars*gmma*r
+    rdot <- cars*yvec[[cars]] - cars*sigma*r
     out <- c(xdot, ydots, rdot, cumdot)
     names(out) <- c("xdot", paste0("y", 1:cars, "dot"), "rdot", "cumdot")
     return(list(out))
@@ -196,7 +217,7 @@ boxcar <- function(time, vars, parms){
   )
 }
 sim <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
-                timeStep=0.1, dfun=boxcar, B1=0, omega=0, gmma=0, t0 =0, 
+                timeStep=0.1, dfun=boxcar, alpha=0, omega=0, sigma=0, t0 =0, 
                 y0 = 1e-9){
   x0 <- 1-y0
   r0 <- 0
@@ -211,8 +232,8 @@ sim <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
     y = y_init
     , func=dfun
     , times=timePoints
-    , parms=list(omega=omega, B0=B0, B1 = B1,  cars = cars,
-                 kpa = kpa, gmma=gmma)
+    , parms=list(omega=omega, B0=B0, alpha = alpha,  cars = cars,
+                 kpa = kpa, sigma=sigma)
   ))
   if(t0!=0){sim <- sim[!sim$time==0,]}
   return(within(sim, {
@@ -222,49 +243,52 @@ sim <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
     else{
       y <- y1
     }
+    inc <- c(diff(cum),0)
+    
   }))
 }
 
 cohortStatsRcPlot <- function(kpa = 0
                               , omega=0
                               , B0=1
-                              , B1 = 0
+                              , alpha = 0
                               , cohortProp=0.6
                               , steps=300
                               , dfun = boxcar
                               , cars = 1
-                              , gmma = 0
+                              , sigma = 0
                               , finTime = 365
                               , y0 = 1e-9
                               , t0 = 0
                               
 ){
-  sdat<- sim(kpa = kpa, omega=omega, B0=B0, B1=B1, timeStep=finTime/steps,
-             finTime=finTime, dfun=dfun, cars=cars, gmma=gmma, y0=y0, t0=t0
+  sdat<- sim(kpa = kpa, omega=omega, B0=B0, alpha=alpha, timeStep=finTime/steps,
+             finTime=finTime, dfun=dfun, cars=cars, sigma=sigma, y0=y0, t0=t0
   )
   sfun <- approxfun(sdat$time, sdat$x, rule=2)
   maxCohort <- t0 + cohortProp * finTime
   cohorts <- with(sdat, time[time<=maxCohort])
   return(as.data.frame(t(
-    sapply(cohorts, function(c) cCalc(sdat = sdat, cohort=c, sfun=sfun, 
+    sapply(cohorts, function(c) cCalc(sdat$time, cohort=c, sfun=sfun, 
                                       tol=1e-4,
                                       cars=cars,
                                       omega = omega,
                                       B0 = B0,
-                                      B1 = B1,
+                                      alpha = alpha,
                                       kpa = kpa
     ))
   )))
 }
 
 simwrap <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
-                    timeStep=0.1, dfun=boxcar, B1=0, omega=0, gmma=0, y0 =1e-9,
+                    timeStep=0.1, dfun=boxcar, alpha=0, omega=0, sigma=0, y0 =1e-9,
                     t0 = 0){
   sdat<-sim(kpa = kpa, B0 =B0, cars=cars, finTime=finTime, timeStep = timeStep,
-            dfun=dfun, B1=B1, omega=omega, gmma = gmma, y0=1e-9, t0=t0)
+            dfun=dfun, alpha=alpha, omega=omega, sigma = sigma, y0=1e-9, t0=t0)
   return(
     list(
       sdat = sdat, finTime = finTime
     )
   )
 }
+#saveEnvironment()

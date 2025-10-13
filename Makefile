@@ -10,9 +10,15 @@ vim_session:
 
 ######################################################################
 
-## moments.pdf: moments.tex
+moments.pdf: moments.tex
 
 ######################################################################
+
+autopipeR = defined
+Codes/RcStat.Rout: Codes/RcStat.R
+	$(pipeRcall)
+Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
+	$(pipeRcall)
 
 ### Makestuff
 
@@ -32,7 +38,7 @@ makestuff:
 
 -include makestuff/os.mk
 
-## -include makestuff/pipeR.mk
+-include makestuff/pipeR.mk
 -include makestuff/texj.mk
 
 -include makestuff/git.mk
