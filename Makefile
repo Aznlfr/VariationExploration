@@ -25,6 +25,7 @@ Codes/RcStat.Rout: Codes/RcStat.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
 
+## slow/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
 slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
 	$(pipeR)
 
@@ -50,6 +51,7 @@ makestuff:
 
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
+-include makestuff/slowtarget.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
