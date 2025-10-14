@@ -11,15 +11,24 @@ vim_session:
 ######################################################################
 
 Sources += $(wildcard *.tex)
-moments.pdf: moments.tex
+## moments.pdf: moments.tex
 
 ######################################################################
+
+Sources += $(wildcard Codes/*.R)
 
 autopipeR = defined
 Codes/RcStat.Rout: Codes/RcStat.R
 	$(pipeRcall)
+
+## Codes/stackBarPlot.Rout: Codes/stackBarPlot.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
+
+slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
+	$(pipeR)
+
+######################################################################
 
 ### Makestuff
 

@@ -6,7 +6,9 @@ library(tidyr)
 library(deSolve)
 library(shellpipes)
 rpcall("Codes/stackBarPlot.Rout Codes/stackBarPlot.R Codes/RcStat.Rout Codes/RcStat.rda")
+
 loadEnvironments()
+
 omega <- c(pi/30) 
 B0 <- c(1.5,3.5,5,8)
 alpha<- c(1)

@@ -1,6 +1,7 @@
+library(deSolve)
 library(shellpipes)
 rpcall("Codes/RcStat.Rout Codes/RcStat.R")
-library(deSolve)
+
 loadEnvironments()
 ## m for moment; these two functions integrate across the infectors from a given cohort
 mderivs <- function(time, vars, parms){
@@ -291,4 +292,5 @@ simwrap <- function(kpa = 0, B0=1,  cars = 1, finTime=365,
     )
   )
 }
-#saveEnvironment()
+
+saveEnvironment()
