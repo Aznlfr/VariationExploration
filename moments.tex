@@ -103,10 +103,6 @@ The instantaneous reproductive number is plotted in panel f.
 	}
 \end{figure}
 \subsection{Erlang infectious periods don't allow variance	above one}
-The survival function  of Erlang distribution is equal to 
-$$
-F(t) = \sum_{n=0}^{m-1} \frac{1}{n!} e^{-m t} (m t)^n.
-$$
 It has been shown that the Erlang distribution has an increasing failure rate, i.e., $\ln F(t)$ is concave, which, in turn, implies the following property \cite{marshall1972classes}
 \begin{equation}
 F(a +b) < F(a) F(b). \label{eq_submultiplicative}
@@ -244,7 +240,7 @@ The intrinsic generation-interval distribution, $g(t)$ is defined as
 \end{equation}
 where $F(t)$ is the survival function corresponding to the infectious period distribution \cite{champredon2015intrinsic}.
 
-According to \cite{chakraborti}, for a continuous non-negative random variable $t$ with survival function $F(t)$, the following relation holds:
+According to \cite[page 150]{feller} and \cite{chakraborti}, for a continuous non-negative random variable $t$ with survival function $F(t)$, the following relation holds:
 \begin{equation} \label{eq_survial_higher}
 	E(t^r) = \int_0^\infty r\tau^{r-1}F(\tau)d\tau, \quad r\geq 1.
 \end{equation}
@@ -277,7 +273,7 @@ Given skewness, $\gamma_i$, is equal to
 \text{CV}^2_g  =	\frac{4\gamma_i\text{CV}^3_i + 12\text{CV}_i^2 + 4}{3(1+\text{CV}_i^2)}-1
 \end{equation}
 \subsection{Special case: Erlang distribution}
-If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite{rawMomentErlang}, we have
+If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
 \begin{equation}
 	E(t^n) = \frac{1}{\lambda^n} \prod_{m=0}^{n-1} (\frac{1}{\kappa} + m),
 \end{equation}
