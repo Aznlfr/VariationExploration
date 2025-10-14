@@ -31,3 +31,5 @@ res_mat <- as.data.frame(t(mapply(outbreakStats, B0=grid$B0,
                                                   steps=steps,
                                                   y0=y0,
                                                   t0=t0))))
+
+saveEnvironment()

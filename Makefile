@@ -25,9 +25,18 @@ Codes/RcStat.Rout: Codes/RcStat.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
 
-## slow/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
+######################################################################
+
+Sources += $(wildcard slow/*)
 slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
 	$(pipeR)
+
+Ignore += figs
+figs/bars.Rout: slow/multiSim.rda Codes/bars.R | figs
+	$(pipeR)
+
+figs:
+	$(mkdir)
 
 ######################################################################
 
@@ -38,8 +47,7 @@ Sources += Makefile
 Ignore += makestuff
 msrepo = https://github.com/dushoff
 
-## ln -s ../makestuff . ## Do this first if you want a linked makestuff
-Makefile: makestuff/00.stamp
+Makefile: makestuff/01.stamp
 makestuff/%.stamp: | makestuff
 	- $(RM) makestuff/*.stamp
 	cd makestuff && $(MAKE) pull
