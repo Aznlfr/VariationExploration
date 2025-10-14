@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{cleveref}
+\usepackage{url}
 \title{Variance exploration}
 % \author{aaghaeeyan }
 % \date{September 2025}
@@ -211,10 +212,10 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %		The instantaneous reproductive number ($R_i(\tau) = \beta(\tau)x(\tau)$)
 %		is shared among the individuals in the same cohort share, and, accordingly, the calculated variance stems from the between-cohort variance.
 %		The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$), and the immunity waning rate is set to 1 (\Cref{eq_Erlang}, $\sigma=1$).
-%		The length of simulation is $365$.
+%		The length of simulation is $365$. 
 %	}
 %\end{figure}
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{Codes/plots/RibarPlotVaryingSigma.pdf}
 	\caption{Calculated variance in the instantaneous reproductive number for different rates of waning immunity ($\sigma=0.02,0.05,0.1$) and average transmission rates ($\beta_0 = 1.5,3.5,5,8$). 
@@ -235,7 +236,61 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %		The duration of simulation is $365$.
 %	}
 %\end{figure}
+\newpage
+\section{Intrinsic generation-interval distribution and infectious period distribution}
+The intrinsic generation-interval distribution, $g(t)$ is defined as 
+\begin{equation}
+	g(t) = \frac{F(t)}{\int F(t) dt},
+\end{equation}
+where $F(t)$ is the survival function corresponding to the infectious period distribution \cite{champredon2015intrinsic}.
 
+According to \cite{chakraborti}, for a continuous non-negative random variable $t$ with survival function $F(t)$, the following relation holds:
+\begin{equation} \label{eq_survial_higher}
+	E(t^r) = \int_0^\infty r\tau^{r-1}F(\tau)d\tau, \quad r\geq 1.
+\end{equation}
+We then have
+\begin{subequations}
+\begin{align}
+ t^2 g(t) & = \frac{t^2F(t)}{\int F(t) dt}\\
+  \int t^2 g(t) dt & = \frac{ \int t^2F(t) dt}{\int F(t) dt}\\
+  \int t^2 g(t) dt & = \frac{E(t^3)}{3\int F(t) dt} \text{ (Using \Cref{eq_survial_higher}) } \\
+  \int t^2 g(t) dt & = \frac{E(t^3)}{3E(t)} \text{ (Using \Cref{eq_survial_higher})}\\
+   V_g + \mu^2_g & = \frac{E(t^3)}{3\mu_i} \\
+     \text{CV}^2_g + 1 & = \frac{E(t^3)}{3\mu_i \mu^2_g} \\
+         \text{CV}^2_g & = \frac{E(t^3)}{3\mu_i \mu^2_g} -1 \label{eq_cvg}
+\end{align}
+\end{subequations}
+The means $\mu_i$ and $\mu_g$ are related by
+\begin{equation} \label{eq_mug_mui}
+	\mu_g = (1 + \text{CV}^2_i)\frac{\mu_i}{2}
+\end{equation}
+Substituting \Cref{eq_mug_mui} to \Cref{eq_cvg} results in
+\begin{equation} \label{eq_cv2g}
+ \text{CV}^2_g  = \frac{4E(t^3)}{3\mu_i^3 (1 + \text{CV}^2_i)^2} -1.
+\end{equation}
+Given skewness, $\gamma_i$, is equal to
+\begin{equation}
+	\gamma_i = \frac{E(t^3) - 3\mu_i \sigma^2_i - \mu^3_i}{\sigma^3_i},
+\end{equation}
+\Cref{eq_cv2g} can be written in terms of skewness and coefficient of variation:
+\begin{equation}
+\text{CV}^2_g  =	\frac{4\gamma_i\text{CV}^3_i + 12\text{CV}_i^2 + 4}{3(1+\text{CV}_i^2)}-1
+\end{equation}
+\subsection{Special case: Erlang distribution}
+If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite{rawMomentErlang}, we have
+\begin{equation}
+	E(t^n) = \frac{1}{\lambda^n} \prod_{m=0}^{n-1} (\frac{1}{\kappa} + m),
+\end{equation}
+which yields
+\begin{equation}
+	E(t^3) = \frac{1}{\lambda^3}\frac{1}{\kappa}(\frac{1}{\kappa}+1)(\frac{1}{\kappa}+2),
+\end{equation}
+and given $\mu_i = \frac{1}{\kappa\lambda}$, and $\text{CV}^2_i = \kappa$,
+ \Cref{eq_cv2g} simplifies to
+\begin{align*}
+\text{CV}^2_g  &= \frac{4(\frac{1}{\kappa}+2)}{3(\frac{1}{\kappa}+1)} -1\\
+& = \frac{1 + 5\kappa}{3(\kappa +1)}
+\end{align*}
 \newpage
 \bibliographystyle{plain}
 \bibliography{ref}
