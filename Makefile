@@ -11,15 +11,33 @@ vim_session:
 ######################################################################
 
 moments.pdf: moments.tex
-## make Codes/plots/higherMoments.pdf ##
 
 ######################################################################
+
+Sources += $(wildcard Codes/*.R)
 
 autopipeR = defined
 Codes/RcStat.Rout: Codes/RcStat.R
 	$(pipeRcall)
+
+## Codes/stackBarPlot.Rout: Codes/stackBarPlot.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
+
+######################################################################
+
+Sources += $(wildcard slow/*)
+slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
+	$(pipeR)
+
+Ignore += figs
+figs/bars.Rout: slow/multiSim.rda Codes/bars.R | figs
+	$(pipeR)
+
+figs:
+	$(mkdir)
+
+######################################################################
 
 ### Makestuff
 
@@ -28,8 +46,7 @@ Sources += Makefile
 Ignore += makestuff
 msrepo = https://github.com/dushoff
 
-## ln -s ../makestuff . ## Do this first if you want a linked makestuff
-Makefile: makestuff/00.stamp
+Makefile: makestuff/01.stamp
 makestuff/%.stamp: | makestuff
 	- $(RM) makestuff/*.stamp
 	cd makestuff && $(MAKE) pull
@@ -41,6 +58,7 @@ makestuff:
 
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
+-include makestuff/slowtarget.mk
 
 -include makestuff/git.mk
 -include makestuff/visual.mk
