@@ -23,17 +23,48 @@ Codes/RcStat.Rout: Codes/RcStat.R
 ## Codes/stackBarPlot.Rout: Codes/stackBarPlot.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
-
+Codes/GIstatistics.Rout: Codes/GIstatistics.R
+	$(pipeR)
 ######################################################################
 
 Sources += $(wildcard slow/*)
 slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
 	$(pipeR)
 
+slowtarget/timePlotSim.Rout: Codes/timePlotSim.R Codes/RcStat.rda
+	$(pipeR)
+
+slowtarget/RcbarPlotVaryingSigmaSim.Rout: Codes/RcbarPlotVaryingSigmaSim.R Codes/RcStat.rda
+	$(pipeR)
+
+slowtarget/RcbarPlotVaryingKappaSim.Rout: Codes/RcbarPlotVaryingKappaSim.R Codes/RcStat.rda
+	$(pipeR)
+
+slowtarget/ErlangMomentsSim.Rout: Codes/ErlangMomentsSim.R Codes/RcStat.rda
+	$(pipeR)
+
+
 Ignore += figs
 figs/bars.Rout: slow/multiSim.rda Codes/bars.R | figs
 	$(pipeR)
 
+figs/ErlangMoments.Rout: slow/ErlangMomentsSim.rda Codes/ErlangMoments.R | figs
+	$(pipeR)
+
+figs/RiMoments.Rout: slow/ErlangMomentsSim.rda Codes/RiMoments.R | figs
+	$(pipeR)
+
+figs/timePlot.Rout: slow/timePlotSim.rda Codes/timePlot.R | figs
+	$(pipeR)
+
+figs/RcbarPlotVaryingSigma.Rout: slow/RcbarPlotVaryingSigmaSim.rda Codes/RcbarPlotVaryingSigma.R | figs
+	$(pipeR)
+
+figs/RibarPlotVaryingSigma.Rout: slow/RcbarPlotVaryingSigmaSim.rda Codes/RibarPlotVaryingSigma.R | figs
+	$(pipeR)
+
+figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPlotVaryingKappa.R | figs
+	$(pipeR)
 figs:
 	$(mkdir)
 

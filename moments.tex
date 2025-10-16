@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{cleveref}
-\usepackage{url}
+\usepackage[multidot]{grffile}  
 \title{Variance exploration}
 % \author{aaghaeeyan }
 % \date{September 2025}
@@ -62,9 +62,9 @@ and the expected case reproductive number of individuals got infected at time $\
 $$C(\tau, \rho) = \int_{\tau}^{\rho} \beta(t) x^{\kappa +1} dt.$$
 \subsection*{Simulation Results for Seasonally Forced Epidemics}
 \begin{figure}[H] 
-\includegraphics[width=1\linewidth]{Codes/plots/time_evolution.pdf}
+\includegraphics[width=1\linewidth]{figs/timePlot.Rout}
 \caption{A seasonally forced epidemic with a period of $60$ (\Cref{eq_Erlang} with $m=1$ and $\kappa=0$).
-		The simulation started at $y(0)=1e-9$ and was run for $200$ time units.
+		The simulation started at $y(0)=1^{-9}$ and was run for $200$ time units.
 	Panels e and d depict the mean and variance in cohort's case reproductive number, respectively. 
 	The transmission rate is periodic with a two-month period (panel g).
 The instantaneous reproductive number is plotted in panel f.
@@ -74,13 +74,13 @@ The instantaneous reproductive number is plotted in panel f.
 \end{figure}
 \begin{figure}[H] 
 	\centering
-	\includegraphics[width=1.35\linewidth]{Codes/plots/RcbarPlotVaryingSigma.pdf}
+	\includegraphics[width=1.35\linewidth]{figs/RcbarPlotVaryingSigma.Rout}
 	\caption{Variance in the case reproductive number remains constant regardless of  average transmission rate ($\beta_0 = 1.5,3.5,5,8$) and immunity waning rate ($\sigma=0.02,0.05,0.1$). 
 		The model has one infectious compartment and is linear in transmission (\Cref{eq_Erlang}, $m=1$, $\kappa=0$).
 		The period of transmission rate is set to $60$ ($\omega = \tau/60$, $\alpha=1$).
 		The panels on the left depict the between and within variances in $R_c$; weighted by incidence (a) and averaged over time (c).
 		The panels on the right depict the total variances in $R_c$, computed independently from the corresponding panels on the left: weighted by incidence (b) and averaged over time (d).
-		The simulation started at $y(0)=1e-9$ and was run for $200$ time units.
+		The simulation started at $y(0)=1^{-9}$ and was run for $200$ time units.
 		Cohort statistics were calculated over the time interval $[100,160]$. 
 		\Cref{fig_seasonally} depicts the time evolution of the system for $\sigma=0.1.$
 	}
@@ -88,47 +88,12 @@ The instantaneous reproductive number is plotted in panel f.
 \end{figure}
 \subsection*{Simulation Results for Nonlinear Incidence}
 \begin{figure}[H]
-	\includegraphics[width=1\linewidth, trim=0cm 0cm 0cm 1cm, clip]{Codes/plots/cohortPlotRiandRcSnonlinear.pdf}
-	\caption{A SIR model with nonlinear transmission (\Cref{eq_Erlang} with $m=1$, $\sigma=0$, $\kappa=0, 0.5, 1$, and $\omega=0$).
-		Panels e and d depict the mean and variance in cohort's case reproductive number, respectively. 
-		The instantaneous reproductive number is plotted in panel f.
+	\includegraphics[width=1.35\linewidth, trim=0cm 0cm 0cm 1cm, clip]{figs/RcbarPlotVaryingKappa.Rout}
+	\caption{Variance in $R_c$ for an SIR model with nonlinear transmission (\Cref{eq_Erlang} with $m=1$, $\sigma=0$, $\kappa=0, 0.5, 1$, and $\omega=0$).
+		Top panels report the variance in $R_c$ weighted by incidence, while panels at the bottom report those weighted by time.
+		The duration of simulation is $100$ time units, and the initial condition is $y(0)=10^{-9}.$
 	}
 \end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\linewidth]{Codes/plots/barPlotRcNonlinear.pdf}
-	\caption{Variance in the case reproductive number in the presence of  nonlinear transmission ($\kappa = 0,0.5,1$) and different  transmission rates ($\beta_0 = 1.5,2,3,4,5$). 
-		The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$, $\sigma=0$).
-		The duration of simulation is $360$ time units.
-	}
-\end{figure}
-\subsection{Erlang infectious periods don't allow variance	above one}
-It has been shown that the Erlang distribution has an increasing failure rate, i.e., $\ln F(t)$ is concave, which, in turn, implies the following property \cite{marshall1972classes}
-\begin{equation}
-F(a +b) < F(a) F(b). \label{eq_submultiplicative}
-\end{equation}
-Given \eqref{eq_CaseReproductiveNumber} and in view of  \eqref{eq_before_Markovian}, the second raw moment of $C(\tau, \rho)$
-equals 
-\begin{align*}
-C_2 &= 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-\tau)\\
- &\overset{\eqref{eq_submultiplicative}}{<} 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-s)F(s-\tau)\\
-\xrightarrow{\eqref{eq_C2final}} & < 2Z.
-\end{align*}
-Previously it has been shown that the mean of the expected case reproductive number, regardless of the infectious period distribution, is one yielding
-$$
-\frac{C_2}{Z} - 1 < 1.
-$$
-\subsubsection*{Simulations for Erlang Distribution of Infectious Period}
-\begin{figure}[H]
-	\includegraphics[width=1.2\linewidth]{Codes/plots/RcbarPlotVaryingCar.pdf}
-	\caption{Variance in the case reproductive number $R_c$ is less than one in the presence of Erlang distribution of infectious period.
-	The period of transmission rate is $T=60$ ($\omega = \tau/6, \alpha = 1$).
-	The rate of waning immunity $\sigma$ is set to $0.1$.
-	$\kappa$ is set to one.
-	Other simulation details are the same as those in \Cref{fig_Rc_seasonally}.
-	}
-\end{figure}
-
 \newpage
 	\subsection{Higher moments of the case reproductive number}
 \begin{align*}
@@ -167,9 +132,45 @@ The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\r
 	We calculated the third and fourth normalized moments of $R_c$ for a simple SIR model.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Codes/plots/higherMoments.pdf}
-	\caption{Simulation results support the conjecture that the third and fourth normalized raw moments are equal to $3!=6$ and $4!=24$ regardless of $R_0$ in a simple SIR model.}
+	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout}
+	\caption{The mean, variance, third, and  fourth normalized raw moments of $R_c$.
+		Simulation results support the theory that the third and fourth normalized raw moments are equal to $3!=6$ and $4!=24$ regardless of the value for $\beta_0$ in a simple SIR model $(m=1)$.
+	However, it is not the case for Erlang distribution $(m=2,4)$.
+	$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.}
 \end{figure}
+\subsection{Erlang infectious periods don't allow variance	above one}
+A distribution function $f(t)$ with survival function $F(t)$ and non-negative support is said to be in increasing failure rate class if the corresponding hazard function, $f(t)/F(t)$, is increasing, or, equivalently, $\ln F(t)$ is concave.
+Erlang distribution, for example, belongs to this class \cite{leemis2023statistical}.
+This implies the following property \cite{marshall1972classes}
+\begin{equation}
+F(a +b) < F(a) F(b). \label{eq_submultiplicative}
+\end{equation}
+Given \eqref{eq_CaseReproductiveNumber} and in view of  \eqref{eq_before_Markovian}, the second raw moment of $C(\tau, \rho)$
+equals 
+\begin{align*}
+C_2 &= 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-\tau)\\
+&\overset{\eqref{eq_submultiplicative}}{<} 2 \int_{\tau = 0}^\infty \int_{t=\tau}^\infty \int_{s=\tau}^t i(\tau)h(t)h(s)ds F(t-s)F(s-\tau)\\
+\xrightarrow{\eqref{eq_C2final}} & < 2Z.
+\end{align*}
+Previously it has been shown that the mean of the expected case reproductive number, regardless of the infectious period distribution, is one yielding
+$$
+\frac{C_2}{Z} - 1 < 1.
+$$
+\subsubsection*{Simulations for Erlang Distribution of Infectious Period}
+\begin{figure}[H]
+	\includegraphics[width=1.2\linewidth]{figs/bars.Rout}
+	\caption{Variance in the case reproductive number $R_c$ is less than one in the presence of Erlang distribution of infectious period.
+		The period of transmission rate is $T=60$ ($\omega = \tau/6, \alpha = 1$).
+		The rate of waning immunity $\sigma$ is set to $0.1$.
+		$\kappa$ is set to zero.
+		Other simulation details are the same as those in \Cref{fig_Rc_seasonally}.
+	}
+\end{figure}
+%\begin{figure}[H]
+%	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout}
+%	\caption{The mean, variance, and normalized higher raw moments of the case reproductive number $R_c$ in the presence of Erlang distribution of infectious period $(m=2,4)$.
+%	}
+%\end{figure}
 	\section{Instantaneous case reproductive number}
 For the following SIR model,
 \begin{align*}
@@ -194,12 +195,14 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %\end{align*}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Codes/plots/RiMoments.pdf}
-	\caption{The instantaneous reproductive number in a simple SIR model.
-		The left panel shows the time integral of $R_i$ over $150$ time units ($\int R_i(\tau)d\tau$). 
-		The  incidence-weighted mean of $R_i$ ($\mu = \frac{\int R_i(\tau) i(\tau) d\tau}{\int i(\tau)d\tau}$) is plotted in the middle panel, and 
-		the variance in $R_i$ ($\frac{\int R_i^2(\tau) i(\tau) d\tau}{\int i(
-			\tau)d\tau} - \mu^2$) is depicted in the right panel. }
+	\includegraphics[width=1\linewidth]{figs/RiMoments.Rout}
+	\caption{The mean and variance of instantaneous reproductive number for different number of infectious compartments $(m=1,2,4)$, and transmission rates $(\beta_0 = 1.5,5,8)$.
+		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
+		The number of steps is $10^4.$
+		Panel a shows the  incidence-weighted mean of $R_i$ ($\mu = \frac{\int R_i(\tau) i(\tau) d\tau}{\int i(\tau)d\tau}$).
+		Panel b reports the variance in $R_i$ ($\frac{\int R_i^2(\tau) i(\tau) d\tau}{\int i(
+			\tau)d\tau} - \mu^2$).
+		Panel c show the time-averaged mean of $R_i$ ($\mu_t = \frac{\int R_i d\tau}{\int d\tau}$), and panel d reports the variance in $R_i$ averaged by time ($\frac{\int R_i^2(\tau) d\tau}{\int d\tau} - \mu_t^2$). }
 \end{figure}
 %\begin{figure}[H]
 %	\centering
@@ -213,10 +216,10 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %\end{figure}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\linewidth]{Codes/plots/RibarPlotVaryingSigma.pdf}
+	\includegraphics[width=1\linewidth]{figs/RibarPlotVaryingSigma.Rout}
 	\caption{Calculated variance in the instantaneous reproductive number for different rates of waning immunity ($\sigma=0.02,0.05,0.1$) and average transmission rates ($\beta_0 = 1.5,3.5,5,8$). 
 		The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$).
-		The panel on the left depicts the variance weighted by the incidence, and the panel on the right depicts the variance obtained by averaging over time.
+		The top panel depicts the variance weighted by the incidence, and the panel at the bottom depicts the variance obtained by averaging over time.
 		The variance was computed for the duration $[100,160]$.
 		Transmission rate has a period of $T= 60$ days ($\omega = \tau/60$, $\alpha=1$).
 		Other simulation details are the same as those in \Cref{fig_Rc_seasonally}.
@@ -234,7 +237,7 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %\end{figure}
 \newpage
 \section{Intrinsic generation-interval distribution and infectious period distribution}
-The intrinsic generation-interval distribution, $g(t)$ is defined as 
+The intrinsic generation-interval distribution, for a constant transmission rate, $g(t)$ is defined as 
 \begin{equation}
 	g(t) = \frac{F(t)}{\int F(t) dt},
 \end{equation}
@@ -270,7 +273,7 @@ Given skewness, $\gamma_i$, is equal to
 \end{equation}
 \Cref{eq_cv2g} can be written in terms of skewness and coefficient of variation:
 \begin{equation}
-\text{CV}^2_g  =	\frac{4\gamma_i\text{CV}^3_i + 12\text{CV}_i^2 + 4}{3(1+\text{CV}_i^2)}-1
+\text{CV}^2_g  =	\frac{4\gamma_i\text{CV}^3_i + 12\text{CV}_i^2 + 4}{3(1+\text{CV}_i^2)^2}-1
 \end{equation}
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have

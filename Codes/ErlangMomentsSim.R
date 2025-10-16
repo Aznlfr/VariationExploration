@@ -3,21 +3,20 @@ library(purrr)
 library(tidyr)
 library(deSolve)
 library(shellpipes)
-rpcall("Codes/stackBarPlot.Rout Codes/stackBarPlot.R Codes/RcStat.Rout Codes/RcStat.rda")
 
 loadEnvironments()
 
 year <- 60
 tau <- 2*pi
-omega <- c(tau/year) 
-B0 <- c(1.5,3.5,5,8)
-alpha<- c(1)
-steps<- 5e3
-cars <- c(1,2,3) #number of compartments
+omega <- c(0) 
+B0 <- c(1.5,5,8)
+alpha<- c(0)
+steps<- 1e4
+cars <- c(1,2,4) #number of compartments
 kpas <- c(0)  #the variation in the susceptibility
 #sigma <- c(0.02, 0.05, 0.1)# waning immunity rate
-sigma<-0.1
-t0<-100
+sigma<-0
+t0<-0
 finTime<-100
 y0<-1e-9
 grid <- expand.grid(B0=B0, cars=cars)
