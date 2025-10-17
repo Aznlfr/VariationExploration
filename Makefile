@@ -23,6 +23,8 @@ Codes/RcStat.Rout: Codes/RcStat.R
 ## Codes/stackBarPlot.Rout: Codes/stackBarPlot.R
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
+Codes/RcStat_v2.Rout: Codes/RcStat_v2.R
+	$(pipeRcall)
 Codes/GIstatistics.Rout: Codes/GIstatistics.R
 	$(pipeR)
 ######################################################################
@@ -43,6 +45,8 @@ slowtarget/RcbarPlotVaryingKappaSim.Rout: Codes/RcbarPlotVaryingKappaSim.R Codes
 slowtarget/ErlangMomentsSim.Rout: Codes/ErlangMomentsSim.R Codes/RcStat.rda
 	$(pipeR)
 
+slowtarget/Rcstat_v2Sim.Rout: Codes/Rcstat_v2Sim.R Codes/RcStat_v2.rda
+	$(pipeR)
 
 Ignore += figs
 figs/bars.Rout: slow/multiSim.rda Codes/bars.R | figs
@@ -64,6 +68,9 @@ figs/RibarPlotVaryingSigma.Rout: slow/RcbarPlotVaryingSigmaSim.rda Codes/RibarPl
 	$(pipeR)
 
 figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPlotVaryingKappa.R | figs
+	$(pipeR)
+
+figs/Rcstat_v2.Rout: slow/Rcstat_v2Sim.rda Codes/Rcstat_v2Plot.R | figs
 	$(pipeR)
 figs:
 	$(mkdir)
