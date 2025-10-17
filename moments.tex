@@ -62,7 +62,7 @@ and the expected case reproductive number of individuals got infected at time $\
 $$C(\tau, \rho) = \int_{\tau}^{\rho} \beta(t) x^{\kappa +1} dt.$$
 \subsection*{Simulation Results for Seasonally Forced Epidemics}
 \begin{figure}[H] 
-\includegraphics[width=1\linewidth]{figs/timePlot.Rout}
+\includegraphics[width=1\linewidth]{figs/timePlot.Rout.pdf}
 \caption{A seasonally forced epidemic with a period of $60$ (\Cref{eq_Erlang} with $m=1$ and $\kappa=0$).
 		The simulation started at $y(0)=1^{-9}$ and was run for $200$ time units.
 	Panels e and d depict the mean and variance in cohort's case reproductive number, respectively. 
@@ -74,7 +74,7 @@ The instantaneous reproductive number is plotted in panel f.
 \end{figure}
 \begin{figure}[H] 
 	\centering
-	\includegraphics[width=1.35\linewidth]{figs/RcbarPlotVaryingSigma.Rout}
+	\includegraphics[width=1.35\linewidth]{figs/RcbarPlotVaryingSigma.Rout.pdf}
 	\caption{Variance in the case reproductive number remains constant regardless of  average transmission rate ($\beta_0 = 1.5,3.5,5,8$) and immunity waning rate ($\sigma=0.02,0.05,0.1$). 
 		The model has one infectious compartment and is linear in transmission (\Cref{eq_Erlang}, $m=1$, $\kappa=0$).
 		The period of transmission rate is set to $60$ ($\omega = \tau/60$, $\alpha=1$).
@@ -88,7 +88,7 @@ The instantaneous reproductive number is plotted in panel f.
 \end{figure}
 \subsection*{Simulation Results for Nonlinear Incidence}
 \begin{figure}[H]
-	\includegraphics[width=1.35\linewidth, trim=0cm 0cm 0cm 1cm, clip]{figs/RcbarPlotVaryingKappa.Rout}
+	\includegraphics[width=1.35\linewidth, trim=0cm 0cm 0cm 1cm, clip]{figs/RcbarPlotVaryingKappa.Rout.pdf}
 	\caption{Variance in $R_c$ for an SIR model with nonlinear transmission (\Cref{eq_Erlang} with $m=1$, $\sigma=0$, $\kappa=0, 0.5, 1$, and $\omega=0$).
 		Top panels report the variance in $R_c$ weighted by incidence, while panels at the bottom report those weighted by time.
 		The duration of simulation is $100$ time units, and the initial condition is $y(0)=10^{-9}.$
@@ -132,7 +132,7 @@ The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\r
 	We calculated the third and fourth normalized moments of $R_c$ for a simple SIR model.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout}
+	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout.pdf}
 	\caption{The mean, variance, third, and  fourth normalized raw moments of $R_c$.
 		Simulation results support the theory that the third and fourth normalized raw moments are equal to $3!=6$ and $4!=24$ regardless of the value for $\beta_0$ in a simple SIR model $(m=1)$.
 	However, it is not the case for Erlang distribution $(m=2,4)$.
@@ -158,7 +158,7 @@ $$
 $$
 \subsubsection*{Simulations for Erlang Distribution of Infectious Period}
 \begin{figure}[H]
-	\includegraphics[width=1.2\linewidth]{figs/bars.Rout}
+	\includegraphics[width=1.2\linewidth]{figs/bars.Rout.pdf}
 	\caption{Variance in the case reproductive number $R_c$ is less than one in the presence of Erlang distribution of infectious period.
 		The period of transmission rate is $T=60$ ($\omega = \tau/6, \alpha = 1$).
 		The rate of waning immunity $\sigma$ is set to $0.1$.
@@ -167,7 +167,7 @@ $$
 	}
 \end{figure}
 %\begin{figure}[H]
-%	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout}
+%	\includegraphics[width=1.2\linewidth]{figs/ErlangMoments.Rout.pdf}
 %	\caption{The mean, variance, and normalized higher raw moments of the case reproductive number $R_c$ in the presence of Erlang distribution of infectious period $(m=2,4)$.
 %	}
 %\end{figure}
@@ -195,7 +195,7 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %\end{align*}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\linewidth]{figs/RiMoments.Rout}
+	\includegraphics[width=1\linewidth]{figs/RiMoments.Rout.pdf}
 	\caption{The mean and variance of instantaneous reproductive number for different number of infectious compartments $(m=1,2,4)$, and transmission rates $(\beta_0 = 1.5,5,8)$.
 		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
 		The number of steps is $10^4.$
@@ -216,7 +216,7 @@ we define the instantaneous case reproductive number associated with cohorts inf
 %\end{figure}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\linewidth]{figs/RibarPlotVaryingSigma.Rout}
+	\includegraphics[width=1\linewidth]{figs/RibarPlotVaryingSigma.Rout.pdf}
 	\caption{Calculated variance in the instantaneous reproductive number for different rates of waning immunity ($\sigma=0.02,0.05,0.1$) and average transmission rates ($\beta_0 = 1.5,3.5,5,8$). 
 		The model has one infectious compartment (\Cref{eq_Erlang}, $m=1$).
 		The top panel depicts the variance weighted by the incidence, and the panel at the bottom depicts the variance obtained by averaging over time.
