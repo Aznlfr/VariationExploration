@@ -12,7 +12,7 @@ vim_session:
 
 Sources += $(wildcard *.tex *.bib)
 moments.pdf: moments.tex
-
+within_btw_Rc.pdf: within_btw_Rc.tex
 ######################################################################
 
 Sources += $(wildcard Codes/*.R)
@@ -49,6 +49,9 @@ slowtarget/ErlangMomentsSim.Rout: Codes/ErlangMomentsSim.R Codes/RcStat.rda
 slowtarget/Rcstat_v2Sim.Rout: Codes/Rcstat_v2Sim.R Codes/RcStat_v2.rda
 	$(pipeR)
 
+slowtarget/RiHigherMomentsSim.Rout: Codes/RiHigherMomentsSim.R Codes/RcStat.rda
+	$(pipeR)
+
 Ignore += figs
 figs/bars.Rout: slow/multiSim.rda Codes/bars.R | figs
 	$(pipeR)
@@ -73,6 +76,9 @@ figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPl
 
 figs/Rcstat_v2.Rout: slow/Rcstat_v2Sim.rda Codes/Rcstat_v2Plot.R | figs
 	$(pipeR)
+figs/RiHigherMoments.Rout: Slow/RiHigherMomentsSim.rda Codes/RiHigherMoments.R | figs
+	$(pipeR)
+
 figs:
 	$(mkdir)
 

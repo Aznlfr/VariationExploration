@@ -107,7 +107,7 @@ outbreakStats <- function(kpa = 0
       y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0, 
           Ri = 0, muRi = 0, SSRi = 0, SSRiTime=0, SSS=0, S4 = 0,
           SStime = 0, mutime=0,
-          ttime=0, withinTime=0, betweenTime=0, SSSRi = 0)
+          ttime=0, withinTime=0, betweenTime=0, SSSRi = 0, S4Ri=0)
       , func=oderivs
       , times=unlist(cStats$cohort)
       , parms=list( B0 = B0, alpha=alpha, omega=omega,
@@ -136,6 +136,7 @@ outbreakStats <- function(kpa = 0
       muRi <- muRi/finS
       SSRi <- SSRi/finS
       SSSRi <- SSSRi/finS
+      S4Ri <- S4Ri/finS
       thirdRc <- SSS/finS
       fourthRc <- S4/finS
       totalVRi <- SSRi - muRi^2
@@ -159,6 +160,7 @@ outbreakStats <- function(kpa = 0
                  , fouthRawRc = fourthRc 
                  , totalVRi=totalVRi
                  , thirdRawRi = SSSRi
+                 ,fourthRawRi = S4Ri
                  , muRi = muRi
                  , muRiTime = muRiTime
                  , totalVtimeRi = SSRiTime
@@ -199,6 +201,7 @@ oderivs <- function(time, vars, parms){
     ,varRc #timeWithin
     ,Rc*Rc #time between
     , inc*Ri*Ri*Ri #SSSRi
+    , inc*Ri*Ri*Ri*Ri #S4Ri
   )))
 }
 boxcar <- function(time, vars, parms){

@@ -123,11 +123,13 @@ The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\r
 	Using the Markovian property, we have
 	\(F(t_k - \tau) = F(t_k - t_{k-1})\times F(t_{k-1} - t_{k-2}) \times \ldots \times F(t_1 - \tau) \).
 	By defining $t_0$ as $\tau$,
-	the term $ \int_{t_l<t_{l+1}} dt_l i(t_l) F(t_{l+1} - t_l)$, for $l \in {0,\ldots,k-1}$, is equal to $y(t_{l+1})$.
+	the term $ \int_{t_l<t_{l+1}} dt_l i(t_l) F(t_{l+1} - t_l)$, for $l \in \{0,\ldots,k-1\}$, is equal to $y(t_{l+1})$.
 	The multiplication of $y(t_{l+1})$ and $\beta x(t_{l+1})$ equals $i(t_{l+1}).$ 
 	By repeating the same procedure for $k$ times,
 	the remaining element would be $k! \int i(t_k) dt_k$.
-	Hence, the $k$th normalized moment, defined as $C_k/Z$ is equal to $k!.$
+	Hence, the $k$th normalized raw moment, defined as $C_k/Z$ is equal to $k!.$
+	
+	In other words, the distribution of the case reproductive number is exponential with rate $1$.
 	
 	We calculated the third and fourth normalized moments of $R_c$ for a simple SIR model.
 \begin{figure}[H]
@@ -269,7 +271,7 @@ Substituting \Cref{eq_mug_mui} to \Cref{eq_cvg} results in
 \begin{equation} \label{eq_cv2g}
  \kappa_g  = \frac{4E(t^3)}{3\mu_i^3 (1 + \kappa_i)^2} -1.
 \end{equation}
-Given moment coefficient of skewness, $\gamma_i$, is equal to
+Defining coefficient of skewness, $\gamma_i$, as $E\big((\frac{t-\mu_i}{\sigma_i})^3\big)$, or, equivalently
 \begin{equation}
 	\gamma_i = \frac{E(t^3) - 3\mu_i \sigma^2_i - \mu^3_i}{\sigma^3_i},
 \end{equation}
@@ -277,19 +279,25 @@ Given moment coefficient of skewness, $\gamma_i$, is equal to
 \begin{equation}
 \kappa_g  =	\frac{4\gamma_i\kappa^{3/2}_i + 12\kappa_i + 4}{3(1+\kappa_i)^2}-1
 \end{equation}
-\subsection{Using consecutive raw moments ratio $\operatorname{PM}$}
+\subsection{Using power means $\operatorname{PM}$ to simplify \Cref{eq_cv2g}}
 By defining
 \begin{align}
 	\operatorname{PM}(l) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx},
 \end{align}
 we have $\operatorname{PM}(1) = \mu_x(1 + \kappa_x)$ and
-\begin{align}
+\begin{align*}
 \operatorname{PM}(2) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
 & = \frac{E(x^3)}{\mu^2_x(1 + \kappa_x)}.
-\end{align}
+\end{align*}
   \Cref{eq_cv2g} can be rewritten as follows:
 \begin{align}
-	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)} -1
+	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)} -1.
+\end{align}
+Moving $1$ to the left-hand side and replacing $1+\kappa_g$ by 
+$\operatorname{PM}_g(1)/\operatorname{PM}_g(0)$
+results in the equation:
+\begin{align}
+\frac{\operatorname{PM}_g(1)}{\operatorname{PM}_g(0)} = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)}.
 \end{align}
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
