@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage[total={6in,8in}]{geometry}
+\usepackage{cleveref}
+
+
+\begin{document}
+	\section{Variance in case per case reproductive number $R_c$}
+Let $i(t)$ and $x(t)$ denote the incidence and fraction of susceptible at time instant $t$ respectively.
+The case per case reproductive number associated with individuals infected at time instant $\tau$ and recovered at time instant $\rho$ is equal to $\int_{\tau}^{\rho}\beta x(t) dt$, where $\beta$ is the transmission rate.
+Denote the density of residence time at infectious state by $f(t)$.
+The total variance in case per case reproductive number $R_c$ is then equal to
+\begin{align} \label{eq_total_var}
+	\operatorname{Var}=\frac{\int_{\tau} \int_{\rho>\tau} d\tau  d\rho  i(\tau) f(\rho - \tau) \big(\int_{\tau}^{\rho} \beta x(t) dt \big)^2 }{\int_{\tau} i(\tau) d\tau} - \Big(\!\frac{\int_{\tau} d\tau \int_{\rho>\tau} i(\tau) f(\rho - \tau) \int_{\tau}^{\rho} \beta x(t) dt }{\int_{\tau} i(\tau) d\tau}\Big)^2.
+\end{align}
+The time of infection is shared among individual in the same cohort.
+The variance in $R_c$ across individuals infected at time instant $\tau$	is equal to
+\begin{align}
+\operatorname{Var}_{\tau} =	\int_{\rho>\tau} d\rho f(\rho - \tau) \big(\int_{\tau}^{\rho} \beta x(t)dt \big)^2 - \big( \int_{\rho>\tau} d\rho f(\rho-\tau) \int_{\tau}^{\rho} \beta x(t) dt \big)^2
+\end{align}
+The with-in component of variance in case per case reproductive number is then
+\begin{align}
+	\operatorname{Var}_{\text{w}} = \frac{\int i(\tau) \operatorname{Var}_{\tau}}{\int i(\tau) d\tau}.
+\end{align}
+The mean case per case reproductive number in cohort infected at time instant $\tau$ is equal to
+\begin{align}
+	\langle R_c\rangle_{\tau} = \int_{\rho > \tau} d\rho f(\rho - \tau) \int_{\tau}^{\rho} \beta x(t) dt
+\end{align}
+Hence, the between-cohort component of variance in case per case reproductive number reads as
+\begin{align}
+\operatorname{Var}_{\text{btw}} = \frac{\int_{\tau} d\tau i(\tau) \langle R_c \rangle_{\tau}^2}{\int_{\tau} i(\tau) d\tau} - \Big(\frac{\int_{\tau} d\tau i(\tau) \langle R_c \rangle_{\tau}}{\int_{\tau} i(\tau) d\tau} \Big)^2.
+\end{align}
+It is easy to verify that the total variance in case per case reproductive number (\Cref{eq_total_var}) equals $\operatorname{Var}_{\text{w}} + \operatorname{Var}_{\text{btw}}$.  
+\end{document}

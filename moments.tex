@@ -196,13 +196,15 @@ we define the instantaneous case reproductive number associated with cohorts inf
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{figs/RiMoments.Rout.pdf}
-	\caption{The mean and variance of instantaneous reproductive number for different number of infectious compartments $(m=1,2,4)$, and transmission rates $(\beta_0 = 1.5,5,8)$.
+	\caption{The mean, variance, and normalized third raw moment of instantaneous reproductive number for different number of infectious compartments $(m=1,2,4)$, and transmission rates $(\beta_0 = 1.5,5,8)$.
 		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
 		The number of steps is $10^4.$
 		Panel a shows the  incidence-weighted mean of $R_i$ ($\mu = \frac{\int R_i(\tau) i(\tau) d\tau}{\int i(\tau)d\tau}$).
 		Panel b reports the variance in $R_i$ ($\frac{\int R_i^2(\tau) i(\tau) d\tau}{\int i(
 			\tau)d\tau} - \mu^2$).
-		Panel c show the time-averaged mean of $R_i$ ($\mu_t = \frac{\int R_i d\tau}{\int d\tau}$), and panel d reports the variance in $R_i$ averaged by time ($\frac{\int R_i^2(\tau) d\tau}{\int d\tau} - \mu_t^2$). }
+		Panel c reports the normalized third raw moment $R_i$ ($\frac{\int R_i^3(\tau) i(\tau) d\tau}{\int i(
+			\tau)d\tau}$).
+		Panel d show the time-averaged mean of $R_i$ ($\mu_t = \frac{\int R_i d\tau}{\int d\tau}$), and panel e reports the variance in $R_i$ averaged by time ($\frac{\int R_i^2(\tau) d\tau}{\int d\tau} - \mu_t^2$). }
 \end{figure}
 %\begin{figure}[H]
 %	\centering
@@ -255,26 +257,40 @@ We then have
   \int t^2 g(t) dt & = \frac{E(t^3)}{3\int F(t) dt} \text{ (Using \Cref{eq_survial_higher}) } \\
   \int t^2 g(t) dt & = \frac{E(t^3)}{3E(t)} \text{ (Using \Cref{eq_survial_higher})}\\
    V_g + \mu^2_g & = \frac{E(t^3)}{3\mu_i} \\
-     \text{CV}^2_g + 1 & = \frac{E(t^3)}{3\mu_i \mu^2_g} \\
-         \text{CV}^2_g & = \frac{E(t^3)}{3\mu_i \mu^2_g} -1 \label{eq_cvg}
+    \kappa_g + 1 & = \frac{E(t^3)}{3\mu_i \mu^2_g} \\
+         \kappa_g & = \frac{E(t^3)}{3\mu_i \mu^2_g} -1 \label{eq_cvg}
 \end{align}
 \end{subequations}
 The means $\mu_i$ and $\mu_g$ are related by
 \begin{equation} \label{eq_mug_mui}
-	\mu_g = (1 + \text{CV}^2_i)\frac{\mu_i}{2}
+	\mu_g = (1 + \kappa_i)\frac{\mu_i}{2}
 \end{equation}
 Substituting \Cref{eq_mug_mui} to \Cref{eq_cvg} results in
 \begin{equation} \label{eq_cv2g}
- \text{CV}^2_g  = \frac{4E(t^3)}{3\mu_i^3 (1 + \text{CV}^2_i)^2} -1.
+ \kappa_g  = \frac{4E(t^3)}{3\mu_i^3 (1 + \kappa_i)^2} -1.
 \end{equation}
-Given skewness, $\gamma_i$, is equal to
+Given moment coefficient of skewness, $\gamma_i$, is equal to
 \begin{equation}
 	\gamma_i = \frac{E(t^3) - 3\mu_i \sigma^2_i - \mu^3_i}{\sigma^3_i},
 \end{equation}
 \Cref{eq_cv2g} can be written in terms of skewness and coefficient of variation:
 \begin{equation}
-\text{CV}^2_g  =	\frac{4\gamma_i\text{CV}^3_i + 12\text{CV}_i^2 + 4}{3(1+\text{CV}_i^2)^2}-1
+\kappa_g  =	\frac{4\gamma_i\kappa^{3/2}_i + 12\kappa_i + 4}{3(1+\kappa_i)^2}-1
 \end{equation}
+\subsection{Using consecutive raw moments ratio $\operatorname{PM}$}
+By defining
+\begin{align}
+	\operatorname{PM}(l) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx},
+\end{align}
+we have $\operatorname{PM}(1) = \mu_x(1 + \kappa_x)$ and
+\begin{align}
+\operatorname{PM}(2) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
+& = \frac{E(x^3)}{\mu^2_x(1 + \kappa_x)}.
+\end{align}
+  \Cref{eq_cv2g} can be rewritten as follows:
+\begin{align}
+	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)} -1
+\end{align}
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
 \begin{equation}

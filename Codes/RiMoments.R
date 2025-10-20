@@ -31,6 +31,13 @@ totalVRi<-ggplot(res_mat, aes(x = B0, y = totalVRi))  +
   facet_wrap( ~ cars, labeller = label_parsed) +
   ylab("Variance in Ri\n(weighted by incidence)") +
   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+############ Plotting normalized third Raw moments ###########
+thirdRi<-ggplot(res_mat, aes(x = B0, y = thirdRawRi))  +
+  geom_bar(
+    stat = "identity") +
+  facet_wrap( ~ cars, labeller = label_parsed) +
+  ylab("3rd raw moment of Ri\n(weighted by incidence)") +
+  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
 ########## Plotting Mean Time-averaged ################
 muRiTime<-ggplot(res_mat, aes(x = B0, y = muRiTime))  +
   geom_bar(
@@ -47,6 +54,6 @@ totaltimeVRi<-ggplot(res_mat, aes(x = B0, y = totalVtimeRi))  +
   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
 
 
-print(muRi / totalVRi / muRiTime / totaltimeVRi+ 
+print(muRi / totalVRi / thirdRi/ muRiTime / totaltimeVRi+ 
 	plot_annotation(tag_levels ="a") 
 )
