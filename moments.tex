@@ -208,6 +208,18 @@ we define the instantaneous case reproductive number associated with cohorts inf
 			\tau)d\tau}$).
 		Panel d show the time-averaged mean of $R_i$ ($\mu_t = \frac{\int R_i d\tau}{\int d\tau}$), and panel e reports the variance in $R_i$ averaged by time ($\frac{\int R_i^2(\tau) d\tau}{\int d\tau} - \mu_t^2$). }
 \end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.1\linewidth]{figs/RiHigherMoments.Rout.pdf}
+	\caption{
+		The mean, variance, and normalized third and fourth raw moments of the instantaneous reproductive number
+		are plotted against the corresponding quantities for the Uniform distribution $U(0,\beta_0)$
+		 for different values of transmission rates $(\beta_0 = 2,4,6,8,10)$ in a simple SIR model ($m=1$).
+		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
+		The number of steps is $3000.$
+		As $\beta_0$ gets larger, $R_i$'s statistics get closer to those of the Uniform distribution.
+	 }
+\end{figure}
 %\begin{figure}[H]
 %	\centering
 %	\includegraphics[width=0.8\linewidth]{Codes/plots/barPlotRi.pdf}

@@ -76,7 +76,8 @@ figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPl
 
 figs/Rcstat_v2.Rout: slow/Rcstat_v2Sim.rda Codes/Rcstat_v2Plot.R | figs
 	$(pipeR)
-figs/RiHigherMoments.Rout: Slow/RiHigherMomentsSim.rda Codes/RiHigherMoments.R | figs
+
+figs/RiHigherMoments.Rout: slow/RiHigherMomentsSim.rda Codes/RiHigherMoments.R | figs
 	$(pipeR)
 
 figs:
