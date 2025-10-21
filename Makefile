@@ -11,8 +11,9 @@ vim_session:
 ######################################################################
 
 Sources += $(wildcard *.tex *.bib)
-moments.pdf: moments.tex
-within_btw_Rc.pdf: within_btw_Rc.tex
+## moments.pdf: moments.tex
+## within_btw_Rc.pdf: within_btw_Rc.tex
+
 ######################################################################
 
 Sources += $(wildcard Codes/*.R)
