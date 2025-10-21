@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{float}
 \usepackage{cleveref}
 \usepackage[multidot]{grffile}  
@@ -64,7 +65,7 @@ $$C(\tau, \rho) = \int_{\tau}^{\rho} \beta(t) x^{\kappa +1} dt.$$
 \begin{figure}[H] 
 \includegraphics[width=1\linewidth]{figs/timePlot.Rout.pdf}
 \caption{A seasonally forced epidemic with a period of $60$ (\Cref{eq_Erlang} with $m=1$ and $\kappa=0$).
-		The simulation started at $y(0)=1^{-9}$ and was run for $200$ time units.
+		The simulation started at $y(0)=10^{-9}$ and was run for $200$ time units.
 	Panels e and d depict the mean and variance in cohort's case reproductive number, respectively. 
 	The transmission rate is periodic with a two-month period (panel g).
 The instantaneous reproductive number is plotted in panel f.
@@ -80,7 +81,7 @@ The instantaneous reproductive number is plotted in panel f.
 		The period of transmission rate is set to $60$ ($\omega = \tau/60$, $\alpha=1$).
 		The panels on the left depict the between and within variances in $R_c$; weighted by incidence (a) and averaged over time (c).
 		The panels on the right depict the total variances in $R_c$, computed independently from the corresponding panels on the left: weighted by incidence (b) and averaged over time (d).
-		The simulation started at $y(0)=1^{-9}$ and was run for $200$ time units.
+		The simulation started at $y(0)=10^{-9}$ and was run for $200$ time units.
 		Cohort statistics were calculated over the time interval $[100,160]$. 
 		\Cref{fig_seasonally} depicts the time evolution of the system for $\sigma=0.1.$
 	}
@@ -138,7 +139,7 @@ The $k^\text{th}$ raw moment of the expected case reproductive number $C(\tau,\r
 	\caption{The mean, variance, third, and  fourth normalized raw moments of $R_c$.
 		Simulation results support the theory that the third and fourth normalized raw moments are equal to $3!=6$ and $4!=24$ regardless of the value for $\beta_0$ in a simple SIR model $(m=1)$.
 	However, it is not the case for Erlang distribution $(m=2,4)$.
-	$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.}
+	$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=10^{-9}$.}
 \end{figure}
 \subsection{Erlang infectious periods don't allow variance	above one}
 A distribution function $f(t)$ with survival function $F(t)$ and non-negative support is said to be in increasing failure rate class if the corresponding hazard function, $f(t)/F(t)$, is increasing, or, equivalently, $\ln F(t)$ is concave.
@@ -199,7 +200,7 @@ we define the instantaneous case reproductive number associated with cohorts inf
 	\centering
 	\includegraphics[width=1\linewidth]{figs/RiMoments.Rout.pdf}
 	\caption{The mean, variance, and normalized third raw moment of instantaneous reproductive number for different number of infectious compartments $(m=1,2,4)$, and transmission rates $(\beta_0 = 1.5,5,8)$.
-		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
+		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=10^{-9}$.
 		The number of steps is $10^4.$
 		Panel a shows the  incidence-weighted mean of $R_i$ ($\mu = \frac{\int R_i(\tau) i(\tau) d\tau}{\int i(\tau)d\tau}$).
 		Panel b reports the variance in $R_i$ ($\frac{\int R_i^2(\tau) i(\tau) d\tau}{\int i(
@@ -215,7 +216,7 @@ we define the instantaneous case reproductive number associated with cohorts inf
 		The mean, variance, and normalized third and fourth raw moments of the instantaneous reproductive number
 		are plotted against the corresponding quantities for the Uniform distribution $U(0,\beta_0)$
 		 for different values of transmission rates $(\beta_0 = 2,4,6,8,10)$ in a simple SIR model ($m=1$).
-		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=1^{-9}$.
+		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=10^{-9}$.
 		The number of steps is $3000.$
 		According to simulations,
 		as $\beta_0$ gets larger, $R_i$'s statistics get closer to those of the Uniform distribution.
@@ -292,26 +293,33 @@ Defining coefficient of skewness, $\gamma_i$, as $E\big((\frac{t-\mu_i}{\sigma_i
 \begin{equation}
 \kappa_g  =	\frac{4\gamma_i\kappa^{3/2}_i + 12\kappa_i + 4}{3(1+\kappa_i)^2}-1
 \end{equation}
-\subsection{Using power means $\operatorname{PM}$ to simplify \Cref{eq_cv2g}}
+\subsection{Using ration of means $\operatorname{PM}$ to simplify \Cref{eq_cv2g}}
 By defining
 \begin{align}
-	\operatorname{PM}(l) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx},
+	\operatorname{PM}_x(l+1) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx}, \quad \text{for } l \in \mathbb{Z}_{\geq 0},
 \end{align}
-we have $\operatorname{PM}(1) = \mu_x(1 + \kappa_x)$ and
+we have $\operatorname{PM}_x(2) = \mu_x(1 + \kappa_x)$ and
 \begin{align*}
-\operatorname{PM}(2) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
+\operatorname{PM}_x(3) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
 & = \frac{E(x^3)}{\mu^2_x(1 + \kappa_x)}.
 \end{align*}
   \Cref{eq_cv2g} can be rewritten as follows:
 \begin{align}
-	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)} -1.
+	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)} -1.
 \end{align}
 Moving $1$ to the left-hand side and replacing $1+\kappa_g$ by 
-$\operatorname{PM}_g(1)/\operatorname{PM}_g(0)$
+$\operatorname{PM}_g(2)/\operatorname{PM}_g(1)$
 results in the equation:
 \begin{align}
-\frac{\operatorname{PM}_g(1)}{\operatorname{PM}_g(0)} = \frac{4}{3}\frac{\operatorname{PM}_i(2)}{\operatorname{PM}_i(1)}.
+\frac{\operatorname{PM}_g(2)}{\operatorname{PM}_g(1)} = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)}.
 \end{align}
+\subsection{A new measure for skewness}
+We define the coefficient $\phi$ as follows
+\begin{align}
+	\operatorname{E}(x^3) = \mu^3 (1+\kappa)^2 (1+\phi),
+\end{align}
+where $\mu$ is the mean and $\kappa$ is the square of the coefficient of variation.
+Then, for the gamma distribution $\phi$ is equal to $\frac{\kappa}{\kappa + 1},$ and for the log-normal distribution is equal to $\kappa$.
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
 \begin{equation}

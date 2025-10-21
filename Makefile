@@ -22,7 +22,8 @@ autopipeR = defined
 Codes/RcStat.Rout: Codes/RcStat.R
 	$(pipeRcall)
 
-## Codes/stackBarPlot.Rout: Codes/stackBarPlot.R
+Codes/RiStat.Rout: Codes/RiStat.R
+	$(pipeRcall)
 Codes/%.Rout: Codes/%.R Codes/RcStat.Rout Codes/RcStat.rda
 	$(pipeRcall)
 Codes/RcStat_v2.Rout: Codes/RcStat_v2.R
@@ -50,7 +51,7 @@ slowtarget/ErlangMomentsSim.Rout: Codes/ErlangMomentsSim.R Codes/RcStat.rda
 slowtarget/Rcstat_v2Sim.Rout: Codes/Rcstat_v2Sim.R Codes/RcStat_v2.rda
 	$(pipeR)
 
-slowtarget/RiHigherMomentsSim.Rout: Codes/RiHigherMomentsSim.R Codes/RcStat.rda
+slowtarget/RiHigherMomentsSim.Rout: Codes/RiHigherMomentsSim.R Codes/RiStat.rda
 	$(pipeR)
 
 Ignore += figs
