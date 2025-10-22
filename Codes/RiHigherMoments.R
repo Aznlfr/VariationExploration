@@ -11,16 +11,23 @@ loadEnvironments()
 startGraphics(width=10, height=10)
 
 B0vec<-unique(res_mat$B0)
-UniformMu<-B0vec/2
-UniformVar <- B0vec^2/12
-UniformThirdRaw <- B0vec^3/4
-UniformFourthRaw <- B0vec^4/5
-UniformStat<-data.frame(B0 = B0vec, mu = UniformMu, var = UniformVar,
-                        thirdRaw = UniformThirdRaw, fourthRaw = UniformFourthRaw)
-res_mat$UniformMu <- UniformStat[match(res_mat$B0, B0),"mu"]
-res_mat$UniformVar <- UniformStat[match(res_mat$B0, B0),"var"]
-res_mat$Uniform3Raw <- UniformStat[match(res_mat$B0,B0), "thirdRaw"]
-res_mat$Uniform4Raw <- UniformStat[match(res_mat$B0,B0), "fourthRaw"]
+remainingSusptible = res_mat$remainingSus
+l_b_Uniform<-remainingSusptible*B0vec
+u_b_Uniform<-B0vec*(1-y0)
+UniformMu<-(u_b_Uniform + l_b_Uniform)/2
+UniformVar <- (u_b_Uniform - l_b_Uniform)^2/12
+UniformThirdRaw <- (u_b_Uniform^2 + l_b_Uniform^2)*(u_b_Uniform + l_b_Uniform)/4
+UniformFourthRaw <- (l_b_Uniform^2*u_b_Uniform^2 +
+                      l_b_Uniform*u_b_Uniform^3 + u_b_Uniform*l_b_Uniform^3 +
+                       u_b_Uniform^4 + l_b_Uniform^4)/5
+UniformStat<-data.frame(B0 = B0vec, mu = UniformMu,
+                        var = UniformVar,
+                        thirdRaw = UniformThirdRaw,
+                        fourthRaw = UniformFourthRaw)
+res_mat$UniformMu <- UniformStat[match(res_mat$B0, UniformStat$B0),"mu"]
+res_mat$UniformVar <- UniformStat[match(res_mat$B0, UniformStat$B0),"var"]
+res_mat$Uniform3Raw <- UniformStat[match(res_mat$B0,UniformStat$B0), "thirdRaw"]
+res_mat$Uniform4Raw <- UniformStat[match(res_mat$B0,UniformStat$B0), "fourthRaw"]
 res_mat$B0 <- as.factor(res_mat$B0)   
 
 ########## Plotting Mean ################
@@ -29,7 +36,7 @@ res_mat_mu <- pivot_longer(res_mat,
                         names_to = "fill",
                         values_to = "mu") 
 
-first<- ggplot(res_mat_mu, aes(x = B0, y = mu, fill = fill)) +
+first<- ggplot(res_mat_mu, aes(x = B0, y = mu, fill =fill )) +
   geom_bar(stat = "identity", position = position_dodge()) +
   ylab(bquote(mu)) +
   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
@@ -65,31 +72,6 @@ fourth<-ggplot(res_mat_4rd, aes(x = B0, y = fourth, fill = fill)) +
   ylab(bquote(E(R[i]^4))) +
   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
 
-# fourth
-# 
-# muRi<-ggplot(res_mat, aes(x = B0, y = muRi))  +
-#   geom_bar(
-#     stat = "identity") +
-#   ylab(bquote(mu)) +
-#   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
-# ############ Plotting Variance ###########
-# totalVRi<-ggplot(res_mat, aes(x = B0, y = totalVRi))  +
-#   geom_bar(
-#     stat = "identity") +
-#   ylab("Variance in Ri\n(weighted by incidence)") +
-#   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
-# ############ Plotting normalized third Raw moments ###########
-# thirdRi<-ggplot(res_mat, aes(x = B0, y = thirdRawRi))  +
-#   geom_bar(
-#     stat = "identity") +
-#   ylab("3rd raw moment of Ri\n(weighted by incidence)") +
-#   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
-# ########## Plotting normalized fourth Raw moments################
-# fourthRi<-ggplot(res_mat, aes(x = B0, y = fourthRawRi))  +
-#   geom_bar(
-#     stat = "identity") +
-#   ylab("fourth raw moment of Ri\n(weighted by incidence)") +
-#   xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
 
 
 print(first / second / third/ fourth + 

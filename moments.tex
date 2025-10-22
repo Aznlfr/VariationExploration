@@ -214,13 +214,10 @@ we define the instantaneous case reproductive number associated with cohorts inf
 	\includegraphics[width=1.1\linewidth]{figs/RiHigherMoments.Rout.pdf}
 	\caption{
 		The mean, variance, and normalized third and fourth raw moments of the instantaneous reproductive number
-		are plotted against the corresponding quantities for the Uniform distribution $U(0,\beta_0)$
-		 for different values of transmission rates $(\beta_0 = 2,4,6,8,10)$ in a simple SIR model ($m=1$).
+		are plotted against the corresponding quantities for the Uniform distribution $U(\beta_0x(\infty),\beta_0x(0))$
+		 for different values of transmission rates $(\beta_0 = 1.2,2,4,8)$ in a simple SIR model ($m=1$).
 		$\alpha$ and $\sigma$ are set to zero, and the duration of the simulation is $100$ time units, starting from the initial condition $y(0)=10^{-9}$.
-		The number of steps is $3000.$
-		According to simulations,
-		as $\beta_0$ gets larger, $R_i$'s statistics get closer to those of the Uniform distribution.
-	 }
+		The number of steps is $3000.$	 }
 \end{figure}
 %\begin{figure}[H]
 %	\centering
@@ -285,41 +282,78 @@ Substituting \Cref{eq_mug_mui} to \Cref{eq_cvg} results in
 \begin{equation} \label{eq_cv2g}
  \kappa_g  = \frac{4E(t^3)}{3\mu_i^3 (1 + \kappa_i)^2} -1.
 \end{equation}
-Defining coefficient of skewness, $\gamma_i$, as $E\big((\frac{t-\mu_i}{\sigma_i})^3\big)$, or, equivalently
-\begin{equation}
-	\gamma_i = \frac{E(t^3) - 3\mu_i \sigma^2_i - \mu^3_i}{\sigma^3_i},
-\end{equation}
-\Cref{eq_cv2g} can be written in terms of skewness and coefficient of variation:
-\begin{equation}
-\kappa_g  =	\frac{4\gamma_i\kappa^{3/2}_i + 12\kappa_i + 4}{3(1+\kappa_i)^2}-1
-\end{equation}
-\subsection{Using ration of means $\operatorname{PM}$ to simplify \Cref{eq_cv2g}}
-By defining
-\begin{align}
-	\operatorname{PM}_x(l+1) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx}, \quad \text{for } l \in \mathbb{Z}_{\geq 0},
-\end{align}
-we have $\operatorname{PM}_x(2) = \mu_x(1 + \kappa_x)$ and
-\begin{align*}
-\operatorname{PM}_x(3) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
-& = \frac{E(x^3)}{\mu^2_x(1 + \kappa_x)}.
-\end{align*}
-  \Cref{eq_cv2g} can be rewritten as follows:
-\begin{align}
-	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)} -1.
-\end{align}
-Moving $1$ to the left-hand side and replacing $1+\kappa_g$ by 
-$\operatorname{PM}_g(2)/\operatorname{PM}_g(1)$
-results in the equation:
-\begin{align}
-\frac{\operatorname{PM}_g(2)}{\operatorname{PM}_g(1)} = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)}.
-\end{align}
+%Defining coefficient of skewness, $\gamma_i$, as $E\big((\frac{t-\mu_i}{\sigma_i})^3\big)$, or, equivalently
+%\begin{equation}
+%	\gamma_i = \frac{E(t^3) - 3\mu_i \sigma^2_i - \mu^3_i}{\sigma^3_i},
+%\end{equation}
+%\Cref{eq_cv2g} can be written in terms of skewness and coefficient of variation:
+%\begin{equation}
+%\kappa_g  =	\frac{4\gamma_i\kappa^{3/2}_i + 12\kappa_i + 4}{3(1+\kappa_i)^2}-1
+%\end{equation}
+%\subsection{Using ration of means $\operatorname{PM}$ to simplify \Cref{eq_cv2g}}
+%By defining
+%\begin{align}
+%	\operatorname{PM}_x(l+1) = \frac{\int x^{l+1}f(x) dx}{\int x^{l}f(x) dx}, \quad \text{for } l \in \mathbb{Z}_{\geq 0},
+%\end{align}
+%we have $\operatorname{PM}_x(2) = \mu_x(1 + \kappa_x)$ and
+%\begin{align*}
+%\operatorname{PM}_x(3) &= \frac{\int x^{3}f(x) dx}{\int x^2f(x) dx}\\
+%& = \frac{E(x^3)}{\mu^2_x(1 + \kappa_x)}.
+%\end{align*}
+%  \Cref{eq_cv2g} can be rewritten as follows:
+%\begin{align}
+%	\kappa_g = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)} -1.
+%\end{align}
+%Moving $1$ to the left-hand side and replacing $1+\kappa_g$ by 
+%$\operatorname{PM}_g(2)/\operatorname{PM}_g(1)$
+%results in the equation:
+%\begin{align}
+%\frac{\operatorname{PM}_g(2)}{\operatorname{PM}_g(1)} = \frac{4}{3}\frac{\operatorname{PM}_i(3)}{\operatorname{PM}_i(2)}.
+%\end{align}
 \subsection{A new measure for skewness}
-We define the coefficient $\phi$ as follows
+We define the coefficient $\phi$ as
 \begin{align}
-	\operatorname{E}(x^3) = \mu^3 (1+\kappa)^2 (1+\phi),
+	\phi = \frac{\operatorname{E}(t^3)}{\mu^3 (1+\kappa)^2} -1,
 \end{align}
 where $\mu$ is the mean and $\kappa$ is the square of the coefficient of variation.
-Then, for the gamma distribution $\phi$ is equal to $\frac{\kappa}{\kappa + 1},$ and for the log-normal distribution is equal to $\kappa$.
+The third raw moment can be expressed in terms of $\mu$, $\kappa$, and $\phi$ as follows:
+\begin{align} \label{eq_phi}
+	\operatorname{E}(t^3) = \mu^3 (1+\kappa)^2 (1+\phi),
+\end{align}
+Substituting \Cref{eq_phi} for $\operatorname{E}(t^3)$ in \Cref{eq_cv2g} results in
+\begin{equation}
+	\kappa_g = \frac{1 + 4 \phi_i}{3}.
+\end{equation}
+
+For the gamma distribution, $\phi$ is equal to $\frac{\kappa}{\kappa + 1},$ and for the log-normal distribution, $\phi$ equals $\kappa$.
+The calculation for the log-normal distribution is as follows:
+
+For $\ln(x) \sim \mathcal{N}(M, S)$, the mean, variance, and the third raw moments are
+\begin{align*}
+	\mu & = \exp(M + S^2/2),\\ 
+	\sigma^2 & = \exp(2M + S^2)\big(\exp(S^2) -1\big),\\
+	\operatorname{E}(x^3)& = \exp(3M + \frac{9S^2}{2}).\\
+\end{align*}
+The square of coefficient of variation $\kappa$ is then
+\begin{align*}
+\kappa &= \frac{\sigma^2}{\mu^2}\\
+ &= \frac{\exp(2M + S^2)\big(\exp(S^2) -1\big)}{\exp(2M + S^2)}\\
+ & = \exp(S^2)-1.
+\end{align*}
+Substituting $\operatorname{E}(x^3)$, 
+$\mu$, and $\kappa$ in \Cref{eq_phi} results in 
+\begin{align*}
+\exp(3M + \frac{9S^2}{2}) &= \big(\exp(M + S^2/2) \big)^3 \big(1 +\exp(S^2)-1 )^2 (1 + \phi)\\
+ &= \exp(3M + 3S^2/2)\exp(2S^2)(1 + \phi)
+\end{align*}
+Dividing both sides by $\exp(3M + 3S^2/2)\exp(2S^2)$ results in 
+$
+	\exp(S^2) -1 = \phi,
+$
+or, equivalently, 
+\begin{equation}
+\phi = \kappa.
+\end{equation}
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
 \begin{equation}
