@@ -312,7 +312,7 @@ Substituting \Cref{eq_mug_mui} to \Cref{eq_cvg} results in
 %\end{align}
 \subsection{A new measure for skewness}
 We define the coefficient $\phi$ as
-\begin{align}
+\begin{align} \label{eq_phi_original}
 	\phi = \frac{\operatorname{E}(t^3)}{\mu^3 (1+\kappa)^2} -1,
 \end{align}
 where $\mu$ is the mean and $\kappa$ is the square of the coefficient of variation.
@@ -324,10 +324,10 @@ Substituting \Cref{eq_phi} for $\operatorname{E}(t^3)$ in \Cref{eq_cv2g} results
 \begin{equation}
 	\kappa_g = \frac{1 + 4 \phi_i}{3}.
 \end{equation}
-
+\subsubsection{Gamma distribution}
 For the gamma distribution, $\phi$ is equal to $\frac{\kappa}{\kappa + 1},$ and for the log-normal distribution, $\phi$ equals $\kappa$.
-The calculation for the log-normal distribution is as follows:
 
+The calculation for the log-normal distribution is as follows:
 For $\ln(x) \sim \mathcal{N}(M, S)$, the mean, variance, and the third raw moments are
 \begin{align*}
 	\mu & = \exp(M + S^2/2),\\ 
@@ -354,6 +354,33 @@ or, equivalently,
 \begin{equation}
 \phi = \kappa.
 \end{equation}
+\subsubsection{Uniform Distribution}
+For $x \sim \operatorname{U}(a,b)$, the mean, variance, and the third raw moments are
+\begin{align*}
+	\mu & =\frac{1}{2}(a+b) \\
+	\sigma^2 & = \frac{1}{12}(a-b)^2\\
+	\operatorname{E}(t^3) & =\underbrace{\frac{1}{4}(a+b)}_{\frac{\mu}{2}}\underbrace{(a^2 + b^2)}_{12\sigma^2 + 2ab}.
+\end{align*}
+Substituting  $\operatorname{E}(t^3)$ into  \Cref{eq_phi}, results in 
+\begin{align}
+\frac{\mu}{2}(12\sigma^2 + 2ab) &= \mu^3 (1+\kappa)^2(1+\phi)\\
+\frac{1}{2}(12\sigma^2 + 2ab) &= \mu^2 (1+\kappa)^2(1+\phi)\\
+\frac{(6\sigma^2 + ab)}{\mu^2} &= (1+\kappa)^2(1+\phi)\\
+6\kappa + \frac{ab}{\mu^2} &= (1+\kappa)^2(1+\phi)\\
+\frac{6\kappa + \frac{ab}{\mu^2}}{(1+\kappa)^2}-1 &= \phi \label{eq_phi_unif}
+\end{align}
+Given  $\kappa$ equals, we have
+\begin{align*}
+\kappa &= \frac{1}{3}\frac{(a-b)^2}{(a+b)^2}\\
+3\kappa & = \frac{(a-b)^2}{(a+b)^2}\\
+3\kappa -1  & = \frac{(a-b)^2 - (a+b)^2}{(a+b)^2}\\
+3\kappa -1  & = \frac{-4ab}{(a+b)^2}\\
+3\kappa -1  & =  \frac{-ab}{\mu^2}
+\end{align*}
+Substituting $3\kappa -1$ for $\frac{-ab}{\mu^2}$ in the RHS of \Cref{eq_phi_unif} results in 
+\begin{align}
+ \phi = \frac{3\kappa + 1}{(1+\kappa)^2}-1 
+\end{align}
 \subsection{Special case: Erlang distribution}
 If the infectious period is Erlang distributed with rate $\lambda$ and shape $1/\kappa$, then according to \cite[page 70]{walck2007hand}, we have
 \begin{equation}
