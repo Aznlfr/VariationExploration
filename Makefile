@@ -76,6 +76,9 @@ figs/RibarPlotVaryingSigma.Rout: slow/RcbarPlotVaryingSigmaSim.rda Codes/RibarPl
 figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPlotVaryingKappa.R | figs
 	$(pipeR)
 
+figs/pitch.Rout: Codes/pitch.R slow/RcbarPlotVaryingKappaSim.rda | figs
+	$(pipeR)
+
 figs/Rcstat_v2.Rout: slow/Rcstat_v2Sim.rda Codes/Rcstat_v2Plot.R | figs
 	$(pipeR)
 
