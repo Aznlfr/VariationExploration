@@ -1,9 +1,6 @@
 library(ggplot2); theme_set(theme_bw())
 library(dplyr)
-library(purrr)
-library(patchwork)
 library(tidyr)
-library(deSolve)
 library(shellpipes)
 
 loadEnvironments()
@@ -30,8 +27,11 @@ stackbar <- (ggplot(res_mat_long)
 		position = "stack"
 	)
 	+ facet_wrap( ~ kpa, labeller = label_parsed)
-	+ ylab("Variance in Rc")
+
+	+ ylab(bquote("Variance in " ~ R[c]))
 	+ xlab(bquote(R[0]))
+	+ scale_fill_manual(values = c("red", "blue"))
+
 	+ theme(axis.title.y = element_text(size = 10))
 	+ theme(legend.position = "none")
 )
