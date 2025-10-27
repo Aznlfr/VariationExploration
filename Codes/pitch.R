@@ -16,8 +16,8 @@ res_mat_long <- (res_mat
 
 res_mat_long$B0 <- as.factor(res_mat_long$B0)   
 res_mat_long$kpa <- factor(res_mat_long$kpa, 
-	labels = c(paste0("kappa:", kpas[1]),
-  	paste0("kappa:", kpas[3]))
+	labels = c(paste0("kappa ==", kpas[1]),
+  	paste0("kappa ==", kpas[3]))
 )
 
 stackbar <- (ggplot(res_mat_long)
