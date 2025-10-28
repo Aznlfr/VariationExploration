@@ -8,16 +8,15 @@ loadEnvironments()
 startGraphics(width=3, height=4)
 
 res_mat_long <- (res_mat
-	|> pivot_longer(cols = c(between, within),
-		names_to = "source", values_to = "RcVariance"
+	|> pivot_longer(
+		cols = c(between, within)
+		, names_to = "source", values_to = "RcVariance"
 	)
-	|> filter(kpa != 0.5)
-)
-
-res_mat_long$B0 <- as.factor(res_mat_long$B0)   
-res_mat_long$kpa <- factor(res_mat_long$kpa, 
-	labels = c(paste0("kappa ==", kpas[1]),
-  	paste0("kappa ==", kpas[3]))
+	|> filter(kpa %in% c(0, 2))
+	|> mutate(
+		kLabel = paste0("kappa ==", kpa)
+		, B0 = as.factor(B0)
+	)
 )
 
 stackbar <- (ggplot(res_mat_long)
@@ -26,7 +25,8 @@ stackbar <- (ggplot(res_mat_long)
 		stat = "identity",
 		position = "stack"
 	)
-	+ facet_wrap( ~ kpa, labeller = label_parsed)
+	+ facet_wrap( ~ kLabel, labeller = label_parsed)
+	## + facet_wrap(~kpas , labeller = label_bquote(kappa == .(kpas)))
 
 	+ ylab(bquote("Variance in " ~ R[c]))
 	+ xlab(bquote(R[0]))

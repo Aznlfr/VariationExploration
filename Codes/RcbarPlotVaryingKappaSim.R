@@ -13,7 +13,7 @@ B0 <- c(1.5,3.5,5,8)
 alpha<- c(0)
 steps<- 5e3
 cars <- c(1) #number of compartments
-kpas <- c(0,0.5,1)  #the variation in the susceptibility
+kpas <- 0:3 #the variation in the susceptibility
 sigma <- c(0) # waning immunity rate
 t0<-0
 finTime<-100

@@ -39,9 +39,11 @@ slowtarget/multiSim.Rout: Codes/multiSim.R Codes/RcStat.rda
 slowtarget/timePlotSim.Rout: Codes/timePlotSim.R Codes/RcStat.rda
 	$(pipeR)
 
+## Explore waning
 slowtarget/RcbarPlotVaryingSigmaSim.Rout: Codes/RcbarPlotVaryingSigmaSim.R Codes/RcStat.rda
 	$(pipeR)
 
+## Explore phenHet
 slowtarget/RcbarPlotVaryingKappaSim.Rout: Codes/RcbarPlotVaryingKappaSim.R Codes/RcStat.rda
 	$(pipeR)
 
@@ -97,7 +99,7 @@ Sources += Makefile
 Ignore += makestuff
 msrepo = https://github.com/dushoff
 
-Makefile: makestuff/01.stamp
+Makefile: makestuff/02.stamp
 makestuff/%.stamp: | makestuff
 	- $(RM) makestuff/*.stamp
 	cd makestuff && $(MAKE) pull
@@ -109,6 +111,7 @@ makestuff:
 
 -include makestuff/pipeR.mk
 -include makestuff/texj.mk
+## makestuff/slowtarget.md
 -include makestuff/slowtarget.mk
 
 -include makestuff/git.mk
