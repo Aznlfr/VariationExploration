@@ -77,3 +77,4 @@ fourth<-ggplot(res_mat_4rd, aes(x = B0, y = fourth, fill = fill)) +
 print(first / second / third/ fourth + 
         plot_annotation(tag_levels ="a") 
 )
+saveEnvironment()
