@@ -1,4 +1,4 @@
-library(ggplot2)
+library(ggplot2); theme_set(theme_bw())
 library(dplyr)
 library(purrr)
 library(patchwork)
@@ -10,48 +10,53 @@ loadEnvironments()
 
 startGraphics(width=10, height=10)
 
-
-res_mat$B0 <- as.factor(res_mat$B0)   
-res_mat$cars <- factor(res_mat$cars, 
-                             labels = c(paste0("m:", cars[1]),
-                                        paste0("m:", cars[2]),
-                                        paste0("m:", cars[3])
-                                        ))
+res_mat <- res_mat |> mutate(B0 = factor(B0), carLabels = paste0("m==", cars)
+                             , cars = factor(cars))
 ########## Plotting Mean ################
-muRi<-ggplot(res_mat, aes(x = B0, y = muRi))  +
-  geom_bar(
-    stat = "identity") +
-  facet_wrap( ~ cars, labeller = label_parsed) +
-  ylab(bquote(mu)) +
-  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+muRi<-(ggplot(res_mat)
+      + aes(x = B0, y = muRi)
+      + geom_bar(stat = "identity")
+      + facet_wrap( ~ carLabels, labeller = label_parsed)
+      +  ylab(bquote(mu))
+      +  xlab(bquote(beta[0]))
+      + theme(axis.title.y = element_text(size = 10))
+      )
 ############ Plotting Variance ###########
-totalVRi<-ggplot(res_mat, aes(x = B0, y = totalVRi))  +
-  geom_bar(
-    stat = "identity") +
-  facet_wrap( ~ cars, labeller = label_parsed) +
-  ylab("Variance in Ri\n(weighted by incidence)") +
-  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+totalVRi<-(ggplot(res_mat)
+           + aes(x = B0, y = totalVRi)
+            +  geom_bar(stat = "identity")
+            +  facet_wrap( ~ carLabels, labeller = label_parsed)
+            +  ylab("Variance in Ri\n(weighted by incidence)")
+            +  xlab(bquote(beta[0]))
+            + theme(axis.title.y = element_text(size = 10))
+)
 ############ Plotting normalized third Raw moments ###########
-thirdRi<-ggplot(res_mat, aes(x = B0, y = thirdRawRi))  +
-  geom_bar(
-    stat = "identity") +
-  facet_wrap( ~ cars, labeller = label_parsed) +
-  ylab("3rd raw moment of Ri\n(weighted by incidence)") +
-  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+thirdRi<-(ggplot(res_mat)
+          + aes(x = B0, y = thirdRawRi) 
+          +  geom_bar(stat = "identity")
+          +  facet_wrap( ~ carLabels, labeller = label_parsed)
+          +  ylab("3rd raw moment of Ri\n(weighted by incidence)")
+          +  xlab(bquote(beta[0]))
+          + theme(axis.title.y = element_text(size = 10))
+          )
 ########## Plotting Mean Time-averaged ################
-muRiTime<-ggplot(res_mat, aes(x = B0, y = muRiTime))  +
-  geom_bar(
-    stat = "identity") +
-  facet_wrap( ~ cars, labeller = label_parsed) +
-  ylab(bquote(mu ~"(Time-average)")) +
-  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+muRiTime<-(ggplot(res_mat)
+           + aes(x = B0, y = muRiTime)
+          +  geom_bar(stat = "identity")
+          +  facet_wrap( ~ carLabels, labeller = label_parsed)
+          +  ylab(bquote(mu ~"(Time-average)"))
+          +  xlab(bquote(beta[0]))
+          + theme(axis.title.y = element_text(size = 10))
+)
 ############ Plotting Variance Time-averaged ###########
-totaltimeVRi<-ggplot(res_mat, aes(x = B0, y = totalVtimeRi))  +
-  geom_bar(
-    stat = "identity") +
-  facet_wrap( ~ cars, labeller = label_parsed) +
-  ylab("Variance in Ri\n(time-averaged)") +
-  xlab(bquote(beta[0])) + theme(axis.title.y = element_text(size = 10))
+totaltimeVRi<-(ggplot(res_mat)
+               + aes(x = B0, y = totalVtimeRi)
+               +  geom_bar(stat = "identity")
+               +  facet_wrap( ~ carLabels, labeller = label_parsed)
+               +  ylab("Variance in Ri\n(time-averaged)")
+               +  xlab(bquote(beta[0]))
+               + theme(axis.title.y = element_text(size = 10))
+)
 
 
 print(muRi / totalVRi / thirdRi/ muRiTime / totaltimeVRi+ 

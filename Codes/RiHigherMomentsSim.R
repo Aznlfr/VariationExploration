@@ -1,6 +1,3 @@
-library(dplyr)
-library(purrr)
-library(tidyr)
 library(deSolve)
 library(shellpipes)
 
@@ -14,19 +11,19 @@ kpa <- 0
 cars <- 1
 steps<- 1e4
 t0<-0
-finTime<-100
+finTime<-100e
 y0<-1e-9
 grid <- expand.grid(B0=B0)
 res_mat <- as.data.frame(t(mapply(RioutbreakStats, B0=grid$B0,
                                      MoreArgs = list(
-                                                  alpha = alpha,
-                                                  omega = omega,
-                                                  sigma = sigma,
-                                                  kpa = kpa,
-                                                  cars = cars,
-                                                  finTime=finTime,
-                                                  steps=steps,
-                                                  y0=y0,
-                                                  t0=t0))))
+                                                  , alpha = alpha
+                                                  , omega = omega
+                                                  , sigma = sigma
+                                                  , kpa = kpa
+                                                  , cars = cars
+                                                  , finTime=finTime
+                                                  , steps=steps
+                                                  , y0=y0
+                                                  , t0=t0))))
 
 saveEnvironment()
