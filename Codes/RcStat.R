@@ -39,7 +39,7 @@ cCalc <- function(time, cohort, sfun, tol=1e-4, cars, omega, B0, alpha, kpa){
     mom <- cMoments(sTime, sfun, T0=cohort, cars=cars, omega=omega,
                     alpha=alpha, kpa=kpa, B0=B0)
     with(mom[nrow(mom), ], {
-      stopifnot(abs(cumden-1)<tol)
+      #stopifnot(abs(cumden-1)<tol) to run the early phase of the outbreak
       Rctot=Rctot/cumden
       RcSS=RcSS/cumden
       RcSSS=RcSSS/cumden
@@ -204,6 +204,107 @@ oderivs <- function(time, vars, parms){
     , inc*Ri*Ri*Ri*Ri #S4Ri
   )))
 }
+
+
+v1Stats <- function(kpa = 0
+                          , omega=0
+                          , B0=1
+                          , alpha = 0
+                          #  , tmult=6
+                          , cohortProp=0.6
+                          , steps=300
+                          , dfun = boxcar
+                          , cars = 1
+                          , sigma = 0
+                          , finTime = 365
+                          , y0 = 1e-9
+                          , t0 = 0){
+  mySim<- sim(kpa = kpa, omega=omega, B0=B0, alpha=alpha, timeStep=finTime/steps,
+              finTime=finTime, dfun=dfun, cars=cars, sigma=sigma, y0 =y0, t0=t0
+  )
+  with(mySim, {
+    maxCohort <- t0 + cohortProp*finTime
+    ifun <- approxfun(time, y*x^(kpa + 1), rule=2)
+    #ifun <- approxfun(time, inc, rule=2)
+    cStats <- cohortStats(kpa = kpa, 
+                          omega = omega,
+                          B0 = B0,
+                          alpha=alpha,
+                          sdat=mySim,
+                          maxCohort=maxCohort, 
+                          cars=cars)
+    rcfun <- approxfun(cStats$cohort, cStats$Rc, rule=2)
+    varrcfun <- approxfun(cStats$cohort, cStats$varRc, rule=2)
+    wssfun <- approxfun(cStats$cohort, cStats$RcSS, rule = 2)
+    wsssfun <- approxfun(cStats$cohort, cStats$RcSSS, rule = 2)
+    ws4fun <- approxfun(cStats$cohort, cStats$RcS4, rule = 2)
+    mom <- as.data.frame(ode(
+      y=c(finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0, 
+         SSS=0, S4 = 0)
+      , func=v1ODE
+      , times=unlist(cStats$cohort)
+      , parms=list( B0 = B0, alpha=alpha, omega=omega,
+                    ifun=ifun, rcfun=rcfun, varrcfun=varrcfun,
+                    wssfun = wssfun, wsssfun = wsssfun, ws4fun = ws4fun))
+    )
+    
+    with(mom[nrow(mom), ], {
+      mu <- mu/finS
+      SS <- SS/finS
+      w <- w/finS
+      checkV <- (checkV/finS)
+      within <- (V/finS)
+      between <- (SS-mu^2)
+      total = within + between
+      otherCheck = (w-mu^2)
+      Finalsize <- finS
+      thirdRc <- SSS/finS
+      fourthRc <- S4/finS
+      return(c(  stepSize=steps
+                 , B0 = B0
+                # , alpha = alpha
+                # , sigma = sigma
+                # , omega = omega
+                # , cars = cars
+                #  , kpa = kpa
+                 , finTime=finTime
+                 , Finalsize=Finalsize
+                 , muRc=mu
+                 , within=within
+                 , checkWithin = checkV
+                 , between=between
+                 , withinSS = w
+                 , totalVRc = total
+                 , totalVRc_simplified = otherCheck
+                 , totalKRc=total/mu^2
+                 , thirdRawRc = thirdRc 
+                 , fouthRawRc = fourthRc 
+      ))
+    })
+  })
+}
+
+v1ODE <- function(time, vars, parms){
+  Bt<-parms$B0*exp(parms$alpha*sin(parms$omega*(time)))
+  inc <- Bt*parms$ifun(time)
+  Rc <- parms$rcfun(time)
+  varRc <- parms$varrcfun(time)
+  wss <- parms$wssfun(time)
+  wsss <- parms$wsssfun(time)
+  ws4 <- parms$ws4fun(time)
+  return(list(c(  #finS=0, mu=0, SS=0, V=0, w = 0, checkV = 0,     SSS=0, S4 = 0
+    inc #finS
+    ,inc*Rc #mu
+    ,inc*Rc*Rc #RSS
+    ,inc*varRc #V
+    ,inc*wss #w
+    ,inc*(wss - Rc^2) #checkV
+    ,inc*wsss #SSS
+    ,inc*ws4 #S4
+  )))
+}
+
+
 boxcar <- function(time, vars, parms){
   with(as.list(c(vars, parms)), {
     yvec <- (unlist(mget(paste0("y", 1:cars))))

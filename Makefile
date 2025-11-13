@@ -46,6 +46,8 @@ slowtarget/RcbarPlotVaryingSigmaSim.Rout: Codes/RcbarPlotVaryingSigmaSim.R Codes
 ## Explore phenHet
 slowtarget/RcbarPlotVaryingKappaSim.Rout: Codes/RcbarPlotVaryingKappaSim.R Codes/RcStat.rda
 	$(pipeR)
+slowtarget/RcbarPlotVaryingEndTimeSim.Rout: Codes/RcbarPlotVaryingEndTimeSim.R Codes/RcStat.rda
+	$(pipeR)
 
 slowtarget/ErlangMomentsSim.Rout: Codes/ErlangMomentsSim.R Codes/RcStat.rda
 	$(pipeR)
@@ -77,7 +79,10 @@ figs/RibarPlotVaryingSigma.Rout: slow/RcbarPlotVaryingSigmaSim.rda Codes/RibarPl
 
 figs/RcbarPlotVaryingKappa.Rout: slow/RcbarPlotVaryingKappaSim.rda Codes/RcbarPlotVaryingKappa.R | figs
 	$(pipeR)
-
+Codes/timeSimulation.Rout: slow/RcbarPlotVaryingEndTimeSim.rda Codes/timeSimulation.R Codes/RcStat.rda
+	$(pipeR)
+figs/RcbarPlotVaryingEndTime.Rout: slow/RcbarPlotVaryingEndTimeSim.rda Codes/timeSimulation.rda Codes/RcbarPlotVaryingEndTime.R | figs
+	$(pipeR)
 figs/pitch.Rout: Codes/pitch.R slow/RcbarPlotVaryingKappaSim.rda | figs
 	$(pipeR)
 
