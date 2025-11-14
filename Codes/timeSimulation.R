@@ -11,7 +11,7 @@ straightSim <- map_dfr(B0, function(B0){
                          cars = cars,
                          t0 = t0,
                          timeStep=temporalFinalTime/steps,
-                         finTime=temporalFinalTime,
+                         finTime=temporalFinalTime+2,
                          y0 = y0
   ), B0 = B0))
 }

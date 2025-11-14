@@ -106,7 +106,7 @@ inc <- (straightSim |>
                , y = "incidence"
                , color = bquote(beta))
         + xlim(c(0, temporalFinalTime)) 
-        + guides(color="none") 
+        
         
 )
 epiFig<- inc + SusPlot
