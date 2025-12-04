@@ -232,8 +232,8 @@ sim <- function(B0=1,  cars = 1, finTime=365,
   infc <- rep(y0/cars,cars) # y0 is distributed over all infectious cars
   names(infc) <- paste0("y", 1:cars)
   y_init <- c(x = x0, infc, r=r0, cum = cum0)
-  if(t0 !=0) timePoints<- c(0, seq(from=t0, to=t0 + finTime, by=timeStep))
-  else timePoints<- seq(from=t0, to=t0 + finTime, by=timeStep)
+  if(t0 !=0){timePoints<- c(0, seq(from=t0, to=t0 + finTime, by=timeStep))}else{
+      timePoints<- seq(from=t0, to=t0 + finTime, by=timeStep)}
   print(paste0("min",min(timePoints),"max",max(timePoints)))
   sim <- as.data.frame(ode(
     y = y_init
